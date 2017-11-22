@@ -8,6 +8,7 @@ class Post extends News
 	private $_title;
 	private $_content;
 	private $_postDate;
+	private $_lastEdit;
 
 	public function __construct(array $data)
 	{
@@ -42,6 +43,12 @@ class Post extends News
 		$this->_postDate = $date;
 	}
 
+	public function setLastEdit($date)
+	{
+		$date = (string) $date;
+		$this->_lastEdit = $date;
+	}
+
 	public function id()
 	{
 		return $this->_id;
@@ -60,5 +67,10 @@ class Post extends News
 	public function postDate()
 	{
 		return $this->_postDate;
+	}
+
+	public function lastEdit()
+	{
+		return $this->_lastEdit;
 	}
 }
