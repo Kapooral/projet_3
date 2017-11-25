@@ -103,8 +103,23 @@ function postComment($postId, $author, $comment)
 }
 
 
-function reportComment()
+function reportComment($id)
 {
-
+	$commentManager = new CommentManager();
+	if($commentManager->exists($id))
+	{
+		try
+		{
+			$commentManager->report($id);
+		}
+		catch(Exception $e)
+		{
+			echo $e->getMessage();
+		}
+	}
+	else
+	{
+		echo 'Ce commentaire n\'existe pas.';
+	}
 }
 

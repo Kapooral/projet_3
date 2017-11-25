@@ -58,7 +58,10 @@ class CommentManager extends Manager
 	public function report($info)
 	{
 		$req = $this->_db->prepare('UPDATE comment SET reporting = reporting+1 WHERE id = :id');
-		$req->execute([':id' => $info]);
+		if(!$req->execute([':id' => $info]))
+		{
+			throw new Exception('Le commentaire n\'a pu être signalé');
+		}
 	}
 
 	public function delete(Comment $comment)

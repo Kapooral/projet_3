@@ -42,6 +42,7 @@ foreach($comments as $comment)
 ?>
     <p><strong><?= htmlspecialchars($comment->author()) ?></strong> le <?= $comment->commentDate() ?></p>
     <p><?= nl2br(htmlspecialchars($comment->content())) ?></p>
+    <a href = "root.php?action=report&amp;idComment=<?=$comment->id()?>">Signaler</a>
 <?php
 }
 ?>

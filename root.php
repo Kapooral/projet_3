@@ -72,6 +72,16 @@ elseif(isset($_GET['action']))
 				}
 			}
 		break;
+		case 'report':
+			if(isset($_GET['idComment']) && $_GET['idComment'] > 0)
+			{
+				reportComment($_GET['idComment']);
+			}
+			else
+			{
+				echo 'Le commentaire n\'a pas été trouvé.';
+			}
+		break;
 	}
 }
 
