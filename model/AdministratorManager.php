@@ -37,13 +37,17 @@ class AdministratorManager extends Manager
 	public function get($info, $password)
 	{
 		$req = $this->_db->prepare('SELECT id, login, password FROM administrator WHERE login = :login');
-		$req->execute(array($info));
+		$req->execute([':login' => $info]);
 		
 		$data = $req->fetch(PDO::FETCH_ASSOC);
 
 		if(password_verify($password, $data['password']))
 		{
 			return new Administrator($data);
+		}
+		else
+		{
+			throw new Exception('Identifiants incorrects.');
 		}
 	}
 

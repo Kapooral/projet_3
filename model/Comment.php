@@ -1,6 +1,6 @@
 <?php
 
-require('News.php');
+require_once('News.php');
 
 class Comment extends News
 {
@@ -8,6 +8,7 @@ class Comment extends News
 	private $_postId;
 	private $_author;
 	private $_content;
+	private $_reporting;
 	private $_commentDate;
 
 	public function __construct(array $data)
@@ -47,6 +48,16 @@ class Comment extends News
 		$this->_content = $content;
 	}
 
+	public function setReporting($reporting)
+	{
+		$reporting = (int) $reporting;
+
+		if($reporting >= 0)
+		{
+			$this->_reporting = $reporting;
+		}
+	}
+
 	public function setCommentDate($commentDate)
 	{
 		$this->_commentDate = $commentDate;
@@ -70,6 +81,11 @@ class Comment extends News
 	public function content()
 	{
 		return $this->_content;
+	}
+
+	public function reporting()
+	{
+		return $this->_reporting;
 	}
 
 	public function commentDate()

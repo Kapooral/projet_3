@@ -1,4 +1,5 @@
 <?php
+
 require_once('Manager.php');
 
 class PostManager extends Manager
@@ -22,8 +23,8 @@ class PostManager extends Manager
 
 	public function exists($info)
 	{
-		$req = $this->_db->prepare('SELECT COUNT(*) FROM news WHERE id = ?');
-		$req->execute(array($info));
+		$req = $this->_db->prepare('SELECT COUNT(*) FROM news WHERE id = :id');
+		$req->execute([':id' => $info]);
 
 		return (bool) $req->fetchColumn();
 	}
@@ -44,8 +45,8 @@ class PostManager extends Manager
 
 	public function get($postId)
 	{
-	    $req = $this->_db->prepare('SELECT id, title, content, DATE_FORMAT(post_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news WHERE id = ?');
-	    $req->execute(array($postId));
+	    $req = $this->_db->prepare('SELECT id, title, content, DATE_FORMAT(post_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news WHERE id = :id');
+	    $req->execute([':id' => $postId]);
 
 	    return new Post($req->fetch(PDO::FETCH_ASSOC));
 	}
