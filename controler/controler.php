@@ -55,6 +55,20 @@ function disconnect()
     }
 }
 
+function addPost($title, $content)
+{
+	$postManager = new PostManager();
+	try
+	{
+		$postManager->addPost($title, $content);
+		header('Location: root.php');
+	}
+	catch(Exception $e)
+	{
+		echo $e->getMessage();
+	}
+}
+
 function listPosts()
 {
 	$postManager = new PostManager();

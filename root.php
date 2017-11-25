@@ -12,6 +12,21 @@ if(isset($_POST['connect']) && isset($_POST['login']) && isset($_POST['password'
 	connection();
 }
 
+elseif(isset($_POST['publy']))
+{
+	if(!empty($_POST['title']) && !empty($_POST['content']))
+	{
+		$_POST['title'] = htmlspecialchars($_POST['title']);
+		$_POST['content'] = htmlspecialchars($_POST['content']);
+
+		addPost($_POST['title'], $_POST['content']);
+	}
+	else
+	{
+		echo 'Tous les champs ne sont pas remplis.';
+	}
+}
+
 elseif(isset($_GET['disconnect']))
 {
 	disconnect();

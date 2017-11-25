@@ -16,9 +16,11 @@ class PostManager extends Manager
 		$req = $this->_db->prepare('INSERT INTO news (title, content, post_date, last_edit) VALUES (:title, :content, NOW(), NOW())');
 		$req->bindValue(':title', $title);
 		$req->bindValue(':content', $content);
-		$affectedLines = $req->execute();
+		if(!$req->execute())
+		{
+			throw new Exception('Impossible de publier cet article.');
+		}
 
-		return $affectedLines;
 	}
 
 	public function exists($info)
