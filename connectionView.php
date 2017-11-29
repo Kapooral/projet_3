@@ -14,6 +14,6 @@
 			<input type = "submit" value = "Créer un compte" name = "create" />
 		</form>
 
-		<p><a href = "root.php?page=listPosts">Page articles</a></p>
+		<p><a href = "root.php?front=listPosts">Page articles</a></p>
 	</body>
 </html>

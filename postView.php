@@ -5,16 +5,16 @@
 		<meta charset = "utf-8">
 	</head>
 	<body>
-		<p><a href = "root.php?page=listPosts">Retour à la liste des billets</a></p>
+		<p><a href = "root.php?front=listPosts">Retour à la liste des billets</a></p>
 
 		<div>
 		    <h3>
-		        <?= htmlspecialchars($post->title()) ?>
+		        <?= $post->title() ?>
 		        <em>le <?= $post->postDate() ?></em>
 		    </h3>
 		    
 		    <p>
-		        <?= nl2br(htmlspecialchars($post->content())) ?>
+		        <?= nl2br($post->content()) ?>
 		    </p>
 		</div>
 
@@ -42,7 +42,7 @@ foreach($comments as $comment)
 ?>
     <p><strong><?= htmlspecialchars($comment->author()) ?></strong> le <?= $comment->commentDate() ?></p>
     <p><?= nl2br(htmlspecialchars($comment->content())) ?></p>
-    <a href = "root.php?action=report&amp;idComment=<?=$comment->id()?>">Signaler</a>
+    <a href = "root.php?action=report&amp;idComment=<?=$comment->id()?>&amp;idPost=<?=$post->id()?>">Signaler</a>
 <?php
 }
 ?>

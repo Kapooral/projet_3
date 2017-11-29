@@ -5,22 +5,23 @@
 		<meta charset = "utf-8">
 	</head>
 	<body>
+		<a href = "root.php?back=backofficeView">Administration</a>
 <?php
 foreach($posts as $post)
 {
 ?>
 		<div>
 			<h3>
-            	<?= htmlspecialchars($post->title()) ?>
+            	<?= $post->title() ?>
            		<em>le <?= $post->postDate() ?></em>
         	</h3>
         
         	<p>
-	            <?= substr(htmlspecialchars($post->content()), 0, 100) . '...' ?>
+	            <?= substr($post->content(), 0, 100) . '...' ?>
 	            <br />
-            	<em><a href="root.php?page=post&amp;id=<?= $post->id() ?>">En savoir plus</a></em>
+            	<em><a href="root.php?front=post&amp;id=<?= $post->id() ?>">En savoir plus</a></em>
         	</p>
-    </div>
+    	</div>
 <?php
 }
 ?>

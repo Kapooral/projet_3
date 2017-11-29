@@ -12,18 +12,25 @@ echo 'Connexion réussie.';
 	</head>
 	<body>
 		<p>
-			<a href = "?disconnect=1">Déconnexion</a>
+			<a href = "root.php?disconnect=1">Déconnexion</a>
 		</p>
-		<form action = "root.php" method = "post">
-			<p>
-				<label for = "title">Titre</label><br />
-				<input type = "text" name = "title" />
-			</p>
-			<p>
-				<label for = "content">Contenu</label><br />
-				<textarea name = "content"></textarea>
-			</p>
-			<input type = "submit" name = "publy" value = "Publier" />
-		</form>
+		<p>
+			<a href = "root.php?back=addPost">Ajouter un nouvel article</a>
+		</p>
+		<p>
+			<a href = "root.php?back=listPosts">Liste des articles</a>
+		</p>
+		<p>
+			<a href = "root.php?back=reported">Commentaires signalés</a>
+		</p>
+		<p>
+			<a href = "root.php?front=listPosts">Page articles</a>
+		</p>
+		
+		
 	</body>
 </html>
+
+
+
+		

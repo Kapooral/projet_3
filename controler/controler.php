@@ -11,28 +11,25 @@ spl_autoload_register('loadClass');
 
 function connection()
 {
-    if(isset($_POST['login']) && isset($_POST['password']))
+    $administratorManager = new AdministratorManager();
+
+    if($administratorManager->exists($_POST['login']))
     {
-        $administratorManager = new AdministratorManager();
+    	try
+    	{
+    		$administrator = $administratorManager->get($_POST['login'], $_POST['password']);
 
-        if($administratorManager->exists($_POST['login']))
+    		$_SESSION['administrator'] = $administrator;
+    		require('backofficeView.php');
+    	}
+        catch(Exception $e)
         {
-        	try
-        	{
-        		$administrator = $administratorManager->get($_POST['login'], $_POST['password']);
-
-        		$_SESSION['administrator'] = $administrator;
-        		require('backofficeView.php');
-        	}
-            catch(Exception $e)
-            {
-            	echo $e->getMessage();
-            }
+        	echo $e->getMessage();
         }
-        else
-        {
-            echo 'Identifiants incorrects.';
-        }
+    }
+    else
+    {
+    	echo 'Identifiants incorrects.';
     }
 }
 
@@ -61,7 +58,7 @@ function addPost($title, $content)
 	try
 	{
 		$postManager->addPost($title, $content);
-		header('Location: root.php');
+		header('Location: root.php?back=backofficeView');
 	}
 	catch(Exception $e)
 	{
@@ -69,11 +66,45 @@ function addPost($title, $content)
 	}
 }
 
+function editPost($id)
+{
+	$postManager = new PostManager();
+	if($postManager->exists($id))
+	{
+		$post = $postManager->get($id);
+		require('editPostView.php');
+	}
+	else
+	{
+		echo 'Cet article n\'existe pas.';
+	}
+}
+
+function updatePost($id, $title, $content)
+{
+	$postManager = new PostManager();
+	$postManager->update($id, $title, $content);
+	header('Location: root.php?back=listPosts');
+}
+
 function listPosts()
 {
 	$postManager = new PostManager();
     $posts = $postManager->getPosts();
     require('listPostsView.php');
+}
+
+function backgroundListPosts()
+{
+	$postManager = new PostManager();
+	$posts = $postManager->getPosts();
+	require('backgroundListPostsView.php');
+}
+
+function commentsReported()
+{
+	$commentManager = new CommentManager();
+	
 }
 
 function post()
@@ -93,17 +124,16 @@ function postComment($postId, $author, $comment)
 	try
 	{
 		$commentManager->postComment($postId, $author, $comment);
+		header('Location: root.php?front=post&id=' . $postId);
 	} 
     catch(Exception $e)
     {
     	echo $e->getMessage();
     }
-
-    header('Location: root.php?page=post&id=' . $postId);
 }
 
 
-function reportComment($id)
+function reportComment($id, $postId)
 {
 	$commentManager = new CommentManager();
 	if($commentManager->exists($id))
@@ -111,6 +141,7 @@ function reportComment($id)
 		try
 		{
 			$commentManager->report($id);
+			header('Location: root.php?front=post&id=' . $postId);
 		}
 		catch(Exception $e)
 		{
@@ -121,5 +152,12 @@ function reportComment($id)
 	{
 		echo 'Ce commentaire n\'existe pas.';
 	}
+}
+
+function reported()
+{
+	$commentManager = new CommentManager();
+	$comments = $commentManager->getReported();
+	require('commentsReportedView.php');
 }
 

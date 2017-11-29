@@ -64,6 +64,19 @@ class CommentManager extends Manager
 		}
 	}
 
+	public function getReported()
+	{
+		$comments = [];
+		$req = $this->_db->query('SELECT id, author, content, reporting, DATE_FORMAT(comment_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS commentDate FROM comment WHERE reporting > 0 ORDER BY reporting DESC');
+
+		while($data = $req->fetch(PDO::FETCH_ASSOC))
+			{
+				$comments [] = new Comment($data);
+			}
+
+		return $comments;
+	}
+
 	public function delete(Comment $comment)
 	{
 		$req = $this->_db->exec('DELETE FROM comment WHERE id = ' . $comment->id());
