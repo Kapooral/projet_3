@@ -6,10 +6,10 @@
 	</head>
 	<body>
 		<p>
-			<a href = "root.php?back=listPosts">Retour à la liste des articles</a>
+			<a href = "index.php?back=listPosts">Retour à la liste des articles</a>
 		</p>
 		
-		<form action = "root.php" method = "post">
+		<form action = "index.php" method = "post">
 			<p>
 				<input type = "hidden" name = "id" value = "<?= $post->id(); ?>" />
 				<label for = "title">Titre</label><br />

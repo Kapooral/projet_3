@@ -58,7 +58,7 @@ function addPost($title, $content)
 	try
 	{
 		$postManager->addPost($title, $content);
-		header('Location: root.php?back=backofficeView');
+		header('Location: index.php?back=backofficeView');
 	}
 	catch(Exception $e)
 	{
@@ -84,7 +84,7 @@ function updatePost($id, $title, $content)
 {
 	$postManager = new PostManager();
 	$postManager->update($id, $title, $content);
-	header('Location: root.php?back=listPosts');
+	header('Location: index.php?back=listPosts');
 }
 
 function listPosts()
@@ -124,7 +124,7 @@ function postComment($postId, $author, $comment)
 	try
 	{
 		$commentManager->postComment($postId, $author, $comment);
-		header('Location: root.php?front=post&id=' . $postId);
+		header('Location: index.php?front=post&id=' . $postId);
 	} 
     catch(Exception $e)
     {
@@ -141,7 +141,7 @@ function reportComment($id, $postId)
 		try
 		{
 			$commentManager->report($id);
-			header('Location: root.php?front=post&id=' . $postId);
+			header('Location: index.php?front=post&id=' . $postId);
 		}
 		catch(Exception $e)
 		{

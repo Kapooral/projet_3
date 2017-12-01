@@ -12,19 +12,19 @@ echo 'Connexion réussie.';
 	</head>
 	<body>
 		<p>
-			<a href = "root.php?disconnect=1">Déconnexion</a>
+			<a href = "index.php?disconnect=1">Déconnexion</a>
 		</p>
 		<p>
-			<a href = "root.php?back=addPost">Ajouter un nouvel article</a>
+			<a href = "index.php?back=addPost">Ajouter un nouvel article</a>
 		</p>
 		<p>
-			<a href = "root.php?back=listPosts">Liste des articles</a>
+			<a href = "index.php?back=listPosts">Liste des articles</a>
 		</p>
 		<p>
-			<a href = "root.php?back=reported">Commentaires signalés</a>
+			<a href = "index.php?back=reported">Commentaires signalés</a>
 		</p>
 		<p>
-			<a href = "root.php?front=listPosts">Page articles</a>
+			<a href = "index.php?front=listPosts">Page articles</a>
 		</p>
 		
 		

@@ -5,7 +5,7 @@
 		<meta charset = "utf-8">
 	</head>
 	<body>
-		<a href = "root.php?back=backofficeView">Administration</a>
+		<a href = "index.php?back=backofficeView">Administration</a>
 <?php
 foreach($posts as $post)
 {
@@ -19,7 +19,7 @@ foreach($posts as $post)
         	<p>
 	            <?= substr($post->content(), 0, 100) . '...' ?>
 	            <br />
-            	<em><a href="root.php?front=post&amp;id=<?= $post->id() ?>">En savoir plus</a></em>
+            	<em><a href="index.php?front=post&amp;id=<?= $post->id() ?>">En savoir plus</a></em>
         	</p>
     	</div>
 <?php

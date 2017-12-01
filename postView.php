@@ -5,7 +5,7 @@
 		<meta charset = "utf-8">
 	</head>
 	<body>
-		<p><a href = "root.php?front=listPosts">Retour à la liste des billets</a></p>
+		<p><a href = "index.php?front=listPosts">Retour à la liste des billets</a></p>
 
 		<div>
 		    <h3>
@@ -20,7 +20,7 @@
 
 		<h2>Commentaires</h2>
 
-		<form action = "root.php?action=postComment&amp;id=<?= $post->id() ?>" method = "post">
+		<form action = "index.php?action=postComment&amp;id=<?= $post->id() ?>" method = "post">
 		    <div>
 		        <label for = "author">Auteur</label><br />
 		        <input type = "text" name = "author" />
@@ -42,7 +42,7 @@ foreach($comments as $comment)
 ?>
     <p><strong><?= htmlspecialchars($comment->author()) ?></strong> le <?= $comment->commentDate() ?></p>
     <p><?= nl2br(htmlspecialchars($comment->content())) ?></p>
-    <a href = "root.php?action=report&amp;idComment=<?=$comment->id()?>&amp;idPost=<?=$post->id()?>">Signaler</a>
+    <a href = "index.php?action=report&amp;idComment=<?=$comment->id()?>&amp;idPost=<?=$post->id()?>">Signaler</a>
 <?php
 }
 ?>

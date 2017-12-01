@@ -5,7 +5,7 @@
 		<meta charset = "utf-8" />
 	</head>
 	<body>
-		<form action = "root.php" method = "post">
+		<form action = "index.php" method = "post">
 			<label for = "login">Identifiant</label><br />
 			<input type = "text" name = "login" /><br />
 			<label for = "password">Mot de passe</label><br />
@@ -14,6 +14,6 @@
 			<input type = "submit" value = "Créer un compte" name = "create" />
 		</form>
 
-		<p><a href = "root.php?front=listPosts">Page articles</a></p>
+		<p><a href = "index.php?front=listPosts">Page articles</a></p>
 	</body>
 </html>

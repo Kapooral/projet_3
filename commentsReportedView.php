@@ -5,7 +5,7 @@
 		<meta charset = "utf-8">
 	</head>
 	<body>
-		<a href = "root.php?back=backofficeView">Retour</a>
+		<a href = "index.php?back=backofficeView">Retour</a>
 <?php
 foreach($comments as $comment)
 {
