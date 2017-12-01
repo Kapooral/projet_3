@@ -1,6 +1,6 @@
 <?php
 
-set_include_path('.;D:\Documents\Programmation\PHP-MySQL\wamp64\www\projet3');
+//set_include_path('.;D:\Documents\Programmation\PHP-MySQL\wamp64\www\projet3');
 
 function loadClass($class)
 {
@@ -43,7 +43,7 @@ function disconnect()
 	if(isset($_SESSION['administrator']))
 	{
 		session_destroy();
-	    header('Location: connectionView.php');
+	    header('Location: index.php');
 	    exit();
 	}
     else

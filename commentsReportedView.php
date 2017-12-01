@@ -1,3 +1,11 @@
+<?php
+if(!isset($_SESSION['administrator']))
+{
+	header('Location: index.php');
+}
+else
+{
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -21,3 +29,6 @@ foreach($comments as $comment)
 ?>
 	</body>
 </html>
+<?php
+}
+?>

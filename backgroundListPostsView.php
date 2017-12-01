@@ -1,3 +1,11 @@
+<?php
+if(!isset($_SESSION['administrator']))
+{
+	header('Location: index.php');
+}
+else
+{
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -18,3 +26,6 @@ foreach($posts as $post)
 ?>
 	</body>
 </html>
+<?php
+}
+?>

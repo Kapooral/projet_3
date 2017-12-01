@@ -69,7 +69,7 @@ elseif(isset($_GET['back']))
 		switch($_GET['back'])
 		{
 			case 'backofficeView':
-				header('Location: backofficeView.php');
+				require('backofficeView.php');
 			break;
 
 			case 'listPosts':

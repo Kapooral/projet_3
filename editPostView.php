@@ -1,3 +1,11 @@
+<?php
+if(!isset($_SESSION['administrator']))
+{
+	header('Location: index.php');
+}
+else
+{
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -23,3 +31,6 @@
 		</form>
 	</body>
 </html>
+<?php
+}
+?>

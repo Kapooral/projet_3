@@ -1,9 +1,11 @@
 <?php
-
-echo 'Connexion réussie.';
-
+if(!isset($_SESSION['administrator']))
+{
+	header('Location: index.php');
+}
+else
+{
 ?>
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,10 +28,11 @@ echo 'Connexion réussie.';
 		<p>
 			<a href = "index.php?front=listPosts">Page articles</a>
 		</p>
-		
-		
 	</body>
 </html>
+<?php
+}
+?>
 
 
 
