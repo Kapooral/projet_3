@@ -15,7 +15,7 @@ else
 	    <script type = "text/javascript">
 	        tinyMCE.init({
 	        	selector: "textarea",
-	        	plugins: "image, link, anchor, lists, table, textcolor colorpicker, charmap, contextmenu, help, hr, nonbreaking, preview, print, searchreplace", 
+	        	plugins: "image, link, anchor, lists, table, textcolor colorpicker, charmap, contextmenu, help, hr, nonbreaking, preview, print, searchreplace, wordcount", 
 	        	toolbar: "undo redo | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table anchor link image",
 	        	contextmenu: "undo redo | bold italic underline | link image inserttable | cell row column deletetable",
 	        	language: "fr_FR"});
