@@ -161,3 +161,18 @@ function reported()
 	require('commentsReportedView.php');
 }
 
+function authorize($info)
+{
+	$commentManager = new CommentManager();
+	$commentManager->authorize($info);
+
+	header('Location: index.php?back=reported');	
+}
+
+function deleteComment($info)
+{
+	$commentManager = new CommentManager();
+	$commentManager->delete($info);
+
+	header('Location: index.php?back=reported');
+}

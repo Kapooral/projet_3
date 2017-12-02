@@ -20,9 +20,10 @@ foreach($comments as $comment)
 ?>
 	<p>
 		Auteur : <?= $comment->author(); ?> <br />
-		Commentaire : <?= $comment->content(); ?> <br/>
+		Commentaire : <?= nl2br($comment->content()); ?> <br/>
 		Publié le : <?= $comment->commentDate(); ?> <br/>
 		Nombre de signalements : <?= $comment->reporting(); ?> <br/>
+		<a href = "index.php?action=authorize&amp;id=<?=$comment->id()?>">Autoriser</a> | <a href = "index.php?action=deleteComment&amp;id=<?=$comment->id()?>">Supprimer</a>
 	</p>
 <?php
 }

@@ -77,7 +77,7 @@ elseif(isset($_GET['back']))
 			break;
 
 			case 'addPost':
-				echo 'Page d\'ajout de nouvel article.';
+				require('editPostView.php');
 			break;
 
 			case 'reported':
@@ -102,7 +102,7 @@ elseif(isset($_GET['back']))
 	}
 	else
 	{
-		header('Location: connectionView.php');
+		require('connectionView.php');
 	}
 }
 
@@ -134,6 +134,20 @@ elseif(isset($_GET['action']))
 			else
 			{
 				echo 'Le commentaire n\'a pas été trouvé.';
+			}
+		break;
+
+		case 'authorize':
+			if(isset($_GET['id']) && $_GET['id'] > 0)
+			{
+				authorize($_GET['id']);
+			}
+		break;
+
+		case 'deleteComment':
+			if(isset($_GET['id']) && $_GET['id'] > 0)
+			{
+				deleteComment($_GET['id']);
 			}
 		break;
 

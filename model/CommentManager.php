@@ -77,8 +77,14 @@ class CommentManager extends Manager
 		return $comments;
 	}
 
-	public function delete(Comment $comment)
+	public function authorize($info)
 	{
-		$req = $this->_db->exec('DELETE FROM comment WHERE id = ' . $comment->id());
+		$req = $this->_db->prepare('UPDATE comment SET reporting = 0 WHERE id = :id');
+		$req->execute([':id' => $info]);
+	}
+
+	public function delete($info)
+	{
+		$req = $this->_db->exec('DELETE FROM comment WHERE id = ' . $info);
 	}
 }
