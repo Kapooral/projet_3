@@ -11,6 +11,7 @@ else
 	<head>
 		<title>Page d'articles</title>
 		<meta charset = "utf-8">
+		<link href = "public/css/bootstrap.css" rel = "stylesheet">
 		<script type = "text/javascript" src = "tinymce/tinymce.min.js"></script>
 	    <script type = "text/javascript">
 	        tinyMCE.init({
@@ -29,17 +30,18 @@ else
 			<a href = "index.php?back=listPosts">Retour à la liste des articles</a>
 		</p>
 
-		<form action = "index.php" method = "post">
-			<p>
+		<form class = "col-lg-8 col-lg-offset-2" action = "index.php" method = "post">
+			<legend>Modifier un article</legend>
+			<div class = "form-group">
 				<input type = "hidden" name = "id" value = "<?= $post->id(); ?>" />
 				<label for = "title">Titre</label><br />
-				<input type = "text" name = "title" value = "<?= $post->title(); ?>"/>
-			</p>
-			<p>
+				<input class = "form-control" type = "text" name = "title" value = "<?= $post->title(); ?>"/>
+			</div>
+			<div class = "form-group">
 				<label for = "content">Contenu</label><br />
-				<textarea name = "content"><?= nl2br($post->content()); ?></textarea>
-			</p>
-			<input type = "submit" name = "update" value = "Mettre à jour" />
+				<textarea class = "form-control" name = "content"><?= nl2br($post->content()); ?></textarea>
+			</div>
+			<input class = "pull-right" type = "submit" name = "update" value = "Mettre à jour" />
 		</form>
 <?php
 	}
@@ -50,16 +52,17 @@ else
 			<a href = "index.php?back=backofficeView">Retour</a>
 		</p>
 
-		<form action = "index.php" method = "post">
-			<p>
+		<form class = "col-lg-8 col-lg-offset-2" action = "index.php" method = "post">
+			<legend>Ajout d'un nouvel article</legend>
+			<div class = "form-group">
 				<label for = "title">Titre</label><br />
-				<input type = "text" name = "title"/>
-			</p>
-			<p>
+				<input class = "form-control" type = "text" name = "title"/>
+			</div>
+			<div class = "form-group">
 				<label for = "content">Contenu</label><br />
-				<textarea name = "content"></textarea>
-			</p>
-			<input type = "submit" name = "publy" value = "Publier" />
+				<textarea class = "form-control" name = "content"></textarea>
+			</div>
+			<input class = "pull-right" type = "submit" name = "publy" value = "Publier" />
 		</form>
 <?php
 	}
