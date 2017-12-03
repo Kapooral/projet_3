@@ -1,4 +1,5 @@
 <?php
+include('header.php');
 if(!isset($_SESSION['administrator']))
 {
 	header('Location: index.php');
@@ -19,7 +20,8 @@ foreach($posts as $post)
 {
 ?>
 <p>
-	<a href = "index.php?back=editPost&amp;id=<?= $post->id(); ?>"><?= $post->title(); ?></a>
+	<a href = "index.php?back=editPost&amp;id=<?= $post->id(); ?>"><?= $post->title(); ?></a><br/>
+	<a href = "index.php?action=deletePost&amp;id=<?= $post->id();?>">Supprimer</a>
 </p>
 <?php
 }

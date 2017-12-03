@@ -151,6 +151,13 @@ elseif(isset($_GET['action']))
 			}
 		break;
 
+		case 'deletePost':
+			if(isset($_GET['id']) && $_GET['id'] > 0)
+			{
+				deletePost($_GET['id']);
+			}
+		break;
+
 		default:
 			echo 'L\'action spécifiée n\'existe pas.';
 		break;

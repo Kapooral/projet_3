@@ -3,17 +3,23 @@
 	<head>
 		<title>Page de Connexion</title>
 		<meta charset = "utf-8" />
+		<link href = "public/css/bootstrap.css" rel = "stylesheet">
+		<link href = "public/css/connectionView.css" rel = "stylesheet">
 	</head>
 	<body>
-		<form action = "index.php" method = "post">
-			<label for = "login">Identifiant</label><br />
-			<input type = "text" name = "login" /><br />
-			<label for = "password">Mot de passe</label><br />
-			<input type = "password" name = "password" /><br/>
+<?php
+include('header.php');
+?>
+		<form class = "col-lg-4 col-lg-offset-4" action = "index.php" method = "post">
+			<div class = "form-group">
+				<label for = "login">Identifiant</label>
+				<input class = "form-control" type = "text" name = "login" />
+			</div>
+			<div class = "form-group">
+				<label for = "password">Mot de passe</label>
+				<input class = "form-control" type = "password" name = "password" />
+			</div>
 			<input type = "submit" value = "Se connecter" name = "connect" />
-			<input type = "submit" value = "Créer un compte" name = "create" />
 		</form>
-
-		<p><a href = "index.php?front=listPosts">Page articles</a></p>
 	</body>
 </html>

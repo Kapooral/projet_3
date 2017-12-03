@@ -1,4 +1,5 @@
 <?php
+include('header.php');
 if(!isset($_SESSION['administrator']))
 {
 	header('Location: index.php');
@@ -11,23 +12,18 @@ else
 	<head>
 		<title>Page d'administration</title>
 		<meta charset = "utf-8" />
+		<link href = "public/css/bootstrap.css" rel = "stylesheet">
 	</head>
 	<body>
-		<p>
-			<a href = "index.php?disconnect=1">Déconnexion</a>
-		</p>
-		<p>
+		<div>
 			<a href = "index.php?back=addPost">Ajouter un nouvel article</a>
-		</p>
-		<p>
+		</div>
+		<div>
 			<a href = "index.php?back=listPosts">Liste des articles</a>
-		</p>
-		<p>
+		</div>
+		<div>
 			<a href = "index.php?back=reported">Commentaires signalés</a>
-		</p>
-		<p>
-			<a href = "index.php?front=listPosts">Page articles</a>
-		</p>
+		</div>
 	</body>
 </html>
 <?php

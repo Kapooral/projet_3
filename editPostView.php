@@ -1,4 +1,5 @@
 <?php
+include('header.php');
 if(!isset($_SESSION['administrator']))
 {
 	header('Location: index.php');
@@ -19,7 +20,8 @@ else
 	        	plugins: "image, link, anchor, lists, table, textcolor colorpicker, charmap, contextmenu, help, hr, nonbreaking, preview, print, searchreplace, wordcount", 
 	        	toolbar: "undo redo | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table anchor link image",
 	        	contextmenu: "undo redo | bold italic underline | link image inserttable | cell row column deletetable",
-	        	language: "fr_FR"});
+	        	language: "fr_FR",
+	        	height: "300"});
 	     </script>
 	</head>
 <?php
