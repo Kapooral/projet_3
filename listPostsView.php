@@ -20,7 +20,7 @@ foreach($posts as $post)
         	</h3>
         
         	<p>
-	            <?= substr($post->content(), 0, 100) . '...' ?>
+	            <?= $post->content() . '...' ?>
 	            <br />
             	<em><a href="index.php?front=post&amp;id=<?= $post->id() ?>">En savoir plus</a></em>
         	</p>

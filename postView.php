@@ -4,7 +4,7 @@ include('header.php');
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?= htmlspecialchars($post->title()) ?></title>
+		<title><?= $post->title() ?></title>
 		<meta charset = "utf-8">
 	</head>
 	<body>
@@ -17,7 +17,7 @@ include('header.php');
 		    </h3>
 		    
 		    <p>
-		        <?= nl2br($post->content()) ?>
+		        <?= $post->content() ?>
 		    </p>
 		</div>
 

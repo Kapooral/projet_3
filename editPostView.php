@@ -17,11 +17,14 @@ else
 	    <script type = "text/javascript">
 	        tinyMCE.init({
 	        	selector: "textarea",
-	        	plugins: "image, link, anchor, lists, table, textcolor colorpicker, charmap, contextmenu, help, hr, nonbreaking, preview, print, searchreplace, wordcount", 
+	        	plugins: "image, link, anchor, lists, table, textcolor colorpicker, charmap, contextmenu, help, hr, nonbreaking, preview, print, searchreplace, wordcount, visualblocks", 
 	        	toolbar: "undo redo | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table anchor link image",
 	        	contextmenu: "undo redo | bold italic underline | link image inserttable | cell row column deletetable",
 	        	language: "fr_FR",
-	        	height: "300"});
+	        	height: "300",
+	        	forced_root_block: false,
+	        	force_br_newlines: true,
+	        	force_p_newlines: false});
 	     </script>
 	</head>
 <?php
@@ -41,7 +44,7 @@ else
 			</div>
 			<div class = "form-group">
 				<label for = "content">Contenu</label><br />
-				<textarea class = "form-control" name = "content"><?= nl2br($post->content()); ?></textarea>
+				<textarea class = "form-control" name = "content"><?= $post->content() ?></textarea>
 			</div>
 			<input class = "pull-right" type = "submit" name = "update" value = "Mettre à jour" />
 		</form>

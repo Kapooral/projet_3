@@ -16,6 +16,8 @@ elseif(isset($_POST['publy']))
 {
 	if(!empty($_POST['title']) && !empty($_POST['content']))
 	{
+		$_POST['title'] = htmlspecialchars($_POST['title']);
+		$_POST['content'] = htmlspecialchars($_POST['content']);
 		addPost($_POST['title'], $_POST['content']);
 	}
 	else
@@ -28,6 +30,8 @@ elseif(isset($_POST['update']))
 {
 	if(!empty($_POST['id']) && !empty($_POST['title']) && !empty($_POST['content']))
 	{
+		$_POST['title'] = htmlspecialchars($_POST['title']);
+		$_POST['content'] = htmlspecialchars($_POST['content']);
 		updatePost($_POST['id'], $_POST['title'], $_POST['content']);
 	}
 	else

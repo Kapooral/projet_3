@@ -33,7 +33,7 @@ class Post extends News
 
 	public function setContent($content)
 	{
-		$content = (string) $content;
+		$content = (string) htmlspecialchars_decode($content);
 		$this->_content = $content;
 	}
 
