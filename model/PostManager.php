@@ -66,7 +66,7 @@ class PostManager extends Manager
 			$req = $this->_db->prepare('UPDATE news SET title = :title, content = :content, last_edit = NOW() WHERE id = :id');
 			$req->bindValue(':title', $title);
 			$req->bindValue(':content', $content);
-
+			$req->bindValue(':id', $id);
 			$req->execute();
 		}
 		else
