@@ -101,10 +101,12 @@ function backgroundListPosts()
 	require('backgroundListPostsView.php');
 }
 
-function deletePost($id)
+function deletePost($postId)
 {
+	$commentManager = new CommentManager();
+	$commentManager->deletePostComments($postId);
 	$postManager = new PostManager();
-	$postManager->delete($id);
+	$postManager->delete($postId);
 
 	header('Location: index.php?back=listPosts');
 }

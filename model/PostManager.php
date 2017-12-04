@@ -20,7 +20,6 @@ class PostManager extends Manager
 		{
 			throw new Exception('Impossible de publier cet article.');
 		}
-
 	}
 
 	public function exists($info)
@@ -45,26 +44,46 @@ class PostManager extends Manager
 		return $posts;
 	}
 
-	public function get($postId)
+	public function get($id)
 	{
-	    $req = $this->_db->prepare('SELECT id, title, content, DATE_FORMAT(post_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news WHERE id = :id');
-	    $req->execute([':id' => $postId]);
+		if($this->exists($id))
+		{
+			$req = $this->_db->prepare('SELECT id, title, content, DATE_FORMAT(post_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news WHERE id = :id');
+	    	$req->execute([':id' => $id]);
 
-	    return new Post($req->fetch(PDO::FETCH_ASSOC));
+	    	return new Post($req->fetch(PDO::FETCH_ASSOC));
+		}
+	    else
+		{
+			throw new Exception('Cet article n\'existe pas.');
+		}
 	}
 
 	public function update($id, $title, $content)
 	{
-		$req = $this->_db->prepare('UPDATE news SET title = :title, content = :content, last_edit = NOW() WHERE id = :id');
-		$req->bindValue(':title', $title);
-		$req->bindValue(':content', $content);
-		$req->bindValue(':id', $id);
+		if($this->exists($id))
+		{
+			$req = $this->_db->prepare('UPDATE news SET title = :title, content = :content, last_edit = NOW() WHERE id = :id');
+			$req->bindValue(':title', $title);
+			$req->bindValue(':content', $content);
 
-		$req->execute();
+			$req->execute();
+		}
+		else
+		{
+			throw new Exception('Cet article n\'existe pas.');
+		}
 	}
 
 	public function delete($id)
 	{
-		$req = $this->_db->exec('DELETE FROM news WHERE id = ' . $id);
+		if($this->exists($id))
+		{
+			$req = $this->_db->exec('DELETE FROM news WHERE id = ' . $id);
+		}
+		else
+		{
+			throw new Exception('Cet article n\'existe pas.');
+		}
 	}
 }

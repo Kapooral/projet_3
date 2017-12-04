@@ -24,10 +24,10 @@ class CommentManager extends Manager
 	    }
 	}
 
-	public function exists($info)
+	public function exists($id)
 	{
 		$req = $this->_db->prepare('SELECT COUNT(*) FROM comment WHERE id = :id');
-		$req->execute([':id' => $info]);
+		$req->execute([':id' => $id]);
 
 		return (bool) $req->fetchColumn();
 	}
@@ -47,20 +47,30 @@ class CommentManager extends Manager
 	    return $comments;
 	}
 
-	public function get($info)
+	public function get($id)
 	{
-		$req = $this->_db->prepare('SELECT id, author, content, reporting, DATE_FORMAT(comment_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS commentDate FROM comment WHERE id = :id');
-		$req->execute([':id' => $info]);
+		if($this->exists($id))
+		{
+			$req = $this->_db->prepare('SELECT id, author, content, reporting, DATE_FORMAT(comment_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS commentDate FROM comment WHERE id = :id');
+			$req->execute([':id' => $id]);
 
-		return new Comment($req->fetch(PDO::FETCH_ASSOC));
+			return new Comment($req->fetch(PDO::FETCH_ASSOC));
+		}
+		else
+		{
+			throw new Exception('Ce commentaire n\'existe pas.');
+		}
 	}
 
-	public function report($info)
+	public function report($id)
 	{
-		$req = $this->_db->prepare('UPDATE comment SET reporting = reporting+1 WHERE id = :id');
-		if(!$req->execute([':id' => $info]))
+		if($this->exists($id))
 		{
-			throw new Exception('Le commentaire n\'a pu être signalé');
+			$req = $this->_db->prepare('UPDATE comment SET reporting = reporting+1 WHERE id = :id');
+		}
+		else
+		{
+			throw new Exception('Ce commentaire n\'existe pas.');
 		}
 	}
 
@@ -77,14 +87,34 @@ class CommentManager extends Manager
 		return $comments;
 	}
 
-	public function authorize($info)
+	public function authorize($id)
 	{
-		$req = $this->_db->prepare('UPDATE comment SET reporting = 0 WHERE id = :id');
-		$req->execute([':id' => $info]);
+		if($this->exists($id))
+		{
+			$req = $this->_db->prepare('UPDATE comment SET reporting = 0 WHERE id = :id');
+			$req->execute([':id' => $id]);
+		}
+		else
+		{
+			throw new Exception('Ce commentaire n\'existe pas.');
+		}
+		
 	}
 
-	public function delete($info)
+	public function delete($id)
 	{
-		$req = $this->_db->exec('DELETE FROM comment WHERE id = ' . $info);
+		if($this->exists($id))
+		{
+			$req = $this->_db->exec('DELETE FROM comment WHERE id = ' . $id);
+		}
+		else
+		{
+			throw new Exception('Ce commentaire n\'existe pas.');
+		}
+	}
+
+	public function deletePostComments($postId)
+	{
+		$req = $this->_db->exec('DELETE FROM comment WHERE postId = ' . $postId);
 	}
 }
