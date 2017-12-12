@@ -1,5 +1,5 @@
 <?php
-include('header.php');
+include('public\headerBack.php');
 if(!isset($_SESSION['administrator']))
 {
 	header('Location: index.php');
@@ -14,7 +14,7 @@ else
 		<meta charset = "utf-8">
 	</head>
 	<body>
-		<a href = "index.php?back=backofficeView">Retour</a>
+		<a href = "index.php?back=backOfficeView">Retour</a>
 <?php
 foreach($comments as $comment)
 {

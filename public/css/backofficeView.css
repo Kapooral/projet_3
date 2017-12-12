@@ -1,0 +1,12 @@
+hr
+{
+	height: 10px;
+	border: 0;
+	box-shadow: 0 2px 3px -1px rgba(190, 190, 190, 0.5);
+}
+legend
+{
+	margin-top: 30px;
+	margin-bottom: 50px;
+	font-size: 30px;
+}

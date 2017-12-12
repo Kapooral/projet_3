@@ -1,7 +1,5 @@
 <?php
 
-//set_include_path('.;D:\Documents\Programmation\PHP-MySQL\wamp64\www\projet3');
-
 function loadClass($class)
 {
     require( 'model/' . $class . '.php');
@@ -9,27 +7,26 @@ function loadClass($class)
 
 spl_autoload_register('loadClass');
 
-function connection()
+function connection($login, $password)
 {
     $administratorManager = new AdministratorManager();
 
-    if($administratorManager->exists($_POST['login']))
+    if(!$administratorManager->exists($login))
     {
-    	try
-    	{
-    		$administrator = $administratorManager->get($_POST['login'], $_POST['password']);
-
-    		$_SESSION['administrator'] = $administrator;
-    		require('backofficeView.php');
-    	}
-        catch(Exception $e)
-        {
-        	echo $e->getMessage();
-        }
+    	throw new Exception('Identifiants incorrects.');
     }
     else
     {
-    	echo 'Identifiants incorrects.';
+    	$administrator = $administratorManager->get($login);
+    	if(!password_verify($password, $administrator->password()))
+    	{
+    		throw new Exception('Identifiants incorrects.');
+    	}
+    	else
+    	{
+    		$_SESSION['administrator'] = $administrator;
+    		header('Location: index?back=backOfficeView');
+    	}
     }
 }
 
@@ -40,149 +37,365 @@ function isConnect()
 
 function disconnect()
 {
-	if(isset($_SESSION['administrator']))
+	if(!isset($_SESSION['administrator']))
 	{
-		session_destroy();
-	    header('Location: index.php');
-	    exit();
+		throw new Exception('Aucune session n\'est en cours.');
 	}
     else
     {
-    	echo 'Aucune session n\'est en cours.';
+    	session_destroy();
+	    header('Location: index.php');
+	    exit();
     }
 }
 
 function addPost($title, $content)
 {
 	$postManager = new PostManager();
-	try
+	$affectedLines = $postManager->addPost($title, $content);
+
+	if($affectedLines === false)
 	{
-		$postManager->addPost($title, $content);
-		header('Location: index.php?back=backofficeView');
+		throw new Exception('Impossible d\'ajouter cet article.');
 	}
-	catch(Exception $e)
+	else
 	{
-		echo $e->getMessage();
-	}
+		header('Location: index.php?back=backOfficeView');
+	}	
 }
 
 function editPost($id)
 {
 	$postManager = new PostManager();
-	if($postManager->exists($id))
+
+	if(!$postManager->exists($id))
 	{
-		$post = $postManager->get($id);
-		require('editPostView.php');
+		throw new Exception('Cet article n\'existe pas.');
 	}
 	else
 	{
-		echo 'Cet article n\'existe pas.';
+		$post = $postManager->get($id);
+		require('view\backend\editPostView.php');
 	}
 }
 
 function updatePost($id, $title, $content)
 {
 	$postManager = new PostManager();
-	$postManager->update($id, $title, $content);
-	header('Location: index.php?back=listPosts');
+
+	if(!$postManager->exists($id))
+	{
+		throw new Exception('Cet article n\'existe pas.');
+	}
+	else
+	{
+		$affectedLines = $postManager->update($id, $title, $content);
+		if($affectedLines === false)
+		{
+			throw new Exception('Impossible de mettre à jour cet article.');
+		}
+		else
+		{
+			header('Location: index.php?back=listPosts');
+		}
+	}
 }
 
-function listPosts()
+function listPosts($currentPage)
 {
 	$postManager = new PostManager();
-    $posts = $postManager->getPosts();
-    require('listPostsView.php');
+	$totalPost = $postManager->count();
+	$postPerPage = 2;
+	$nbrPage = ceil($totalPost/$postPerPage);
+
+	if($currentPage > $nbrPage)
+	{
+		throw new Exception('La page demandé n\'existe pas.');
+	}
+	else
+	{
+		$start = ($currentPage-1)*$postPerPage;
+
+    	$posts = $postManager->pagination($start, $postPerPage);
+    	require('view\frontend\home.php');
+	}
+
+	
 }
 
 function backgroundListPosts()
 {
 	$postManager = new PostManager();
+
 	$posts = $postManager->getPosts();
-	require('backgroundListPostsView.php');
+	require('view\backend\backOfficeListPostsView.php');
 }
 
 function deletePost($postId)
 {
-	$commentManager = new CommentManager();
-	$commentManager->deletePostComments($postId);
 	$postManager = new PostManager();
-	$postManager->delete($postId);
 
-	header('Location: index.php?back=listPosts');
-}
-
-function commentsReported()
-{
-	$commentManager = new CommentManager();
-	
-}
-
-function post()
-{
-	$postManager = new PostManager();
-	$commentManager = new CommentManager();
-
-    $post = $postManager->get($_GET['id']);
-    $comments = $commentManager->getComments($_GET['id']);
-    require('postView.php');
-}
-
-function postComment($postId, $author, $comment)
-{
-	$commentManager = new CommentManager();
-
-	try
+	if(!$postManager->exists($postId))
 	{
-		$commentManager->postComment($postId, $author, $comment);
-		header('Location: index.php?front=post&id=' . $postId);
-	} 
-    catch(Exception $e)
-    {
-    	echo $e->getMessage();
-    }
-}
-
-
-function reportComment($id, $postId)
-{
-	$commentManager = new CommentManager();
-	if($commentManager->exists($id))
-	{
-		try
-		{
-			$commentManager->report($id);
-			header('Location: index.php?front=post&id=' . $postId);
-		}
-		catch(Exception $e)
-		{
-			echo $e->getMessage();
-		}
+		throw new Exception('Cet article n\'existe pas.');
 	}
 	else
 	{
-		echo 'Ce commentaire n\'existe pas.';
+		$commentManager = new CommentManager();
+		$commentManager->deletePostComments($postId);
+		$affectedLines = $postManager->delete($postId);
+		if($affectedLines == 0)
+		{
+			throw new Exception('Impossible de supprimer cet article.');
+		}
+		else
+		{
+			header('Location: index.php?back=listPosts');
+		}
+	}
+}
+
+function backOffice()
+{
+	$commentManager = new CommentManager();
+	$postManager = new PostManager();
+
+	require('view\backend\backOfficeView.php');
+}
+
+function post($id, $currentPage)
+{
+	$postManager = new PostManager();
+	$commentManager = new CommentManager();
+
+	if(!$postManager->exists($id))
+	{
+		throw new Exception('Cet article n\'existe pas.');
+	}
+	else
+	{
+		$post = $postManager->get($id);
+		if(!isset($post))
+		{
+			throw new Exception('Impossible de récupérer cet article.');
+		}
+		else
+		{
+			$comments = $commentManager->getComments($id);
+			require('view\frontend\postView.php');
+		}
+	}
+}
+
+function postComment($postId, $author, $comment, $page)
+{
+	$commentManager = new CommentManager();
+	$postManager = new PostManager();
+
+	if(!$postManager->exists($postId))
+	{
+		throw new Exception('Cet article n\'existe pas.');
+	}
+	else
+	{
+		$affectedLines = $commentManager->postComment($postId, $author, $comment);
+		if($affectedLines === false)
+		{
+			throw new Exception('Ce commentaire n\'a pas pu être posté.');
+		}
+		else
+		{
+			header('Location: index.php?front=post&page='. $page . '&id=' . $postId);
+		}
+	}
+}
+
+
+function reportComment($id, $postId, $page)
+{
+	$commentManager = new CommentManager();
+	$postManager = new PostManager();
+
+	if(!$commentManager->exists($id))
+	{
+		throw new Exception('Ce commentaire n\'existe pas.');
+	}
+	else
+	{
+		$affectedLines = $commentManager->report($id);
+		if($affectedLines === false)
+		{
+			throw new Exception('Ce commentaire n\'a pas pu être signalé.');
+		}
+		else
+		{
+			if(!$postManager->exists($postId))
+			{
+				throw new Exception('Cet article n\'existe pas.');
+			}
+			else
+			{
+				header('Location: index.php?front=post&page='. $page . '&id=' . $postId);
+			}
+		}
+	}
+}
+
+function likes($postId, $page)
+{
+	$postManager = new PostManager();
+	if(!$postManager->exists($postId))
+	{
+		throw new Exception('Cet article n\'existe pas.');
+	}
+	else
+	{
+		$affectedLines = $postManager->likes($postId);
+		if($affectedLines === false)
+		{
+			throw new Exception('Cet article n\'a pas pu être liké.');
+		}
+		else
+		{
+			header('Location: index.php?front=post&page=' . $page . '&id=' . $postId);
+		}
 	}
 }
 
 function reported()
 {
 	$commentManager = new CommentManager();
+
 	$comments = $commentManager->getReported();
-	require('commentsReportedView.php');
+	require('view\backend\commentsReportedView.php');
 }
 
-function authorize($info)
+function authorize($id)
 {
 	$commentManager = new CommentManager();
-	$commentManager->authorize($info);
 
-	header('Location: index.php?back=reported');	
+	if(!$commentManager->exists($id))
+	{
+		throw new Exception('Ce commentaire n\'existe pas.');
+	}
+	else
+	{
+		$affectedLines = $commentManager->authorize($id);
+		if($affectedLines === false)
+		{
+			throw new Exception('Ce commentaire n\'a pas pu être autorisé.');
+		}
+		else
+		{
+			header('Location: index.php?back=reported');
+		}
+	}
 }
 
-function deleteComment($info)
+function deleteComment($id)
 {
 	$commentManager = new CommentManager();
-	$commentManager->delete($info);
 
-	header('Location: index.php?back=reported');
+	if(!$commentManager->exists($id))
+	{
+		throw new Exception('Ce commentaire n\'existe pas.');
+	}
+	else
+	{
+		$affectedLines = $commentManager->delete($id);
+		if($affectedLines == 0)
+		{
+			throw new Exception('Impossible de supprimer ce commentaire.');
+		}
+		else
+		{
+			header('Location: index.php?back=reported');
+		}
+	}
+}
+
+function uploadImage()
+{
+	if(isset($_FILES['image']))
+	{
+		if($_FILES['image']['error'] = 0)
+		{
+			if($_FILES['image']['size'] <= 2097152)
+			{
+				if(!empty($_FILES['image']['name']))
+				{
+					$image = $_FILES['image']['name'];
+					$extensionAuthorized = ['jpg', 'jpeg', 'png'];
+					$extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+					if(in_array(strtolower($extension), $extensionAuthorized))
+					{
+						$infos = getimagesize($_FILES['image']['tmp_name']);
+						if($infos[2] = 1)
+						{
+							$imageChoose = imagecreatefromjpeg($_FILES['image']['tmp_name']);
+							$sizeImageChoose = getimagesize($_FILES['image']['tmp_name']);
+							$newWidth = 350;
+							$reduct = ($newWidth * 100)/$sizeImageChoose[0];
+							$newHeight = ($sizeImageChoose[1] * $reduct) / 100;
+
+							if($newImage = imagecreatetruecolor($newWidth, $newHeight))
+							{
+								if(imagecopyresampled($newImage, $imageChoose, 0, 0, 0, 0, $newWidth, $newHeight, $sizeImageChoose[0], $sizeImageChoose[1]))
+								{
+									if(imagedestroy($imageChoose))
+									{
+										if(imagejpeg($newImage, 'public/images/essai.' . $extension, 100))
+										{
+											return $nameForDb = 'public/images/essai.' . $extension;
+										}
+										else
+										{
+											throw new Exception('L\'image n\'a pas pu être enregistré.');
+										}
+									}
+									else
+									{
+										throw new Exception('L\'ancienne image n\a pas pu être détruite.');
+									}
+								}
+								else
+								{
+									throw new Exception('imagecopyresampled');
+								}
+							}
+							else
+							{
+								throw new Exception('imagecreatetruecolor.');
+							}
+						}
+						elseif($infos[2] = 3)
+						{
+							$imageChoose = imagecreatefrompng($_FILES['image']['tmp_name']);
+							$sizeImageChoose = getimagesize($_FILES['image']['tmp_name']);
+						}
+						else
+						{
+							throw new Exception('Le type de l\'image est incorrect.');
+						}
+					}
+					else
+					{
+						throw new Exception('Le format du fichier est incorrect.');
+					}
+				}
+				else
+				{
+					throw new Exception('Le nom du fichier est vide.');
+				}
+			}
+			else
+			{
+				throw new Exception('L\'image est trop lourde.');
+			}
+		}
+		else
+		{
+			throw new Exception('Une erreur est survenue lors du téléchargement de l\'image');
+		}
+	}
 }

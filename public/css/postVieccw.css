@@ -1,0 +1,22 @@
+#name
+{
+	margin-left: 15px;
+	line-height: 48px;
+	width: 50px;
+	border: 1px solid black;
+	border-radius: 50px;
+	background-color: grey;
+	text-align: center;
+}
+
+#head
+{
+	line-height: 200px;
+	margin-bottom: 50px;
+	background-image: url("../images/snow.jpg");
+}
+
+#head-title
+{
+	font-size: 30px;
+}
