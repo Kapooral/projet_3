@@ -11,32 +11,41 @@ class AdministratorManager extends Manager
 		$this->_db = $this->dbConnect();
 	}
 
-	public function add($login, $password)
+	public function add($login, $password, $email)
 	{
-		$req = $this->_db->prepare('INSERT INTO administrator (login, password) VALUES (:login, :password)');
+		$req = $this->_db->prepare('INSERT INTO administrator (login, password, email) VALUES (:login, :password), :email');
 		$req->bindValue(':login', $login);
 		$req->bindValue(':password', password_hash($password, PASSWORD_DEFAULT));
+		$req->bindValue(':email', $email);
 		$req->execute();
 	}
 
-	public function exists($info)
+	public function exists($login)
 	{
-		if(is_int($info))
+		if(is_int($login))
 		{
-			return (bool) $this->_db->query('SELECT COUNT(*) FROM administrator WHERE id = ' . $info)->fetchColumn();
+			return (bool) $this->_db->query('SELECT COUNT(*) FROM administrator WHERE id = ' . $login)->fetchColumn();
 		}
 		else
 		{
 			$req = $this->_db->prepare('SELECT COUNT(*) FROM administrator WHERE login = :login');
-			$req->execute([':login' => $info]);
+			$req->execute([':login' => $login]);
 
 			return (bool) $req->fetchColumn();
 		}
 	}
 
+	public function emailExists($email)
+	{
+		$req = $this->_db->prepare('SELECT COUNT(*) FROM administrator WHERE email = :email');
+		$req->execute([':email' => $email]);
+
+		return (bool) $req->fetchColumn();
+	}
+
 	public function get($login)
 	{
-		$req = $this->_db->prepare('SELECT id, login, password FROM administrator WHERE login = :login');
+		$req = $this->_db->prepare('SELECT id, login, password, email FROM administrator WHERE login = :login');
 		$req->execute([':login' => $login]);
 		
 		$data = $req->fetch(PDO::FETCH_ASSOC);
@@ -44,12 +53,23 @@ class AdministratorManager extends Manager
 		return new Administrator($data);
 	}
 
-	public function update(Administrator $admin)
+	public function updatePassword($login, $password)
 	{
-		$req = $this->_db->prepare('UPDATE administrator SET login = :login, password = :password WHERE id = :id');
-		$req->bindValue(':login', $admin->login());
-		$req->bindValue(':password', password_hash($admin->password(), PASSWORD_DEFAULT));
-		$req->bindValue(':id', $admin->id());
-		$req->execute();
+		$req = $this->_db->prepare('UPDATE administrator SET password = :password WHERE login = :login');
+		$req->bindValue(':password', password_hash($password, PASSWORD_DEFAULT));
+		$req->bindValue(':login', $login);
+		$affectedLines = $req->execute();
+
+		return $affectedLines;
+	}
+
+	public function updateEmail($login, $email)
+	{
+		$req = $this->_db->prepare('UPDATE administrator SET email = :email WHERE login = :login');
+		$req->bindValue(':email', $email);
+		$req->bindValue(':login', $login);
+		$affectedLines = $req->execute();
+
+		return $affectedLines;
 	}
 }

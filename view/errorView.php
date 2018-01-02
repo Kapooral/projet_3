@@ -1,16 +1,12 @@
 <?php
-include('public\header.php');
+
+$title = 'Page d\'erreur';
+ob_start();
+
 ?>
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset = "utf-8">
-		<title>Page d'erreur</title>
-		<link href = "public/css/bootstrap.css" rel = "stylesheet" />
-	</head>
-	<body>
-		<div class = "container">
-<?php
+
+	<div class = "container">
+<?php 		
 if(isset($errorMessage))
 {
 ?>
@@ -28,5 +24,12 @@ else
 <?php
 }
 ?>
-		</div>
-	</body>
+	</div>
+
+<?php 
+
+$content = ob_get_clean();
+require('public/backTemplate.php');
+
+?>
+

@@ -7,7 +7,6 @@ class Post extends News
 	private $_id;
 	private $_title;
 	private $_content;
-	private $_likes;
 	private $_image;
 	private $_postDate;
 	private $_lastEdit;
@@ -37,12 +36,6 @@ class Post extends News
 	{
 		$content = (string) htmlspecialchars_decode($content);
 		$this->_content = $content;
-	}
-
-	public function setLikes($likes)
-	{
-		$like = (int) $likes;
-		$this->_like = $likes;
 	}
 
 	public function setImage($image)
@@ -76,11 +69,6 @@ class Post extends News
 	public function content()
 	{
 		return $this->_content;
-	}
-
-	public function likes()
-	{
-		return $this->_likes;
 	}
 
 	public function image()

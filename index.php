@@ -2,7 +2,10 @@
 
 session_start();
 
-require('controler/controler.php');
+require('controller/PostController.php');
+require('controller/CommentController.php');
+require('controller/AdministratorController.php');
+//require('controler/controler.php');
 
 try
 {
@@ -10,9 +13,42 @@ try
 	{
 		if(!empty($_POST['login']) && !empty($_POST['password']))
 		{
-			$_POST['login'] = htmlspecialchars($_POST['login']);
-			$_POST['password'] = htmlspecialchars($_POST['password']);
-			connection($_POST['login'], $_POST['password']);
+			$login = htmlspecialchars($_POST['login']);
+			$password = htmlspecialchars($_POST['password']);
+
+			$administratorController = new AdministratorController();
+			$administratorController->connection($login, $password);
+		}
+		else
+		{
+			throw new Exception('Tous les champs ne sont pas remplis.');
+		}
+	}
+
+	elseif(isset($_POST['resetPassword']))
+	{
+		if(!empty($_POST['login']) && !empty($_POST['email']))
+		{
+			$login = htmlspecialchars($_POST['login']);
+			$email = htmlspecialchars($_POST['email']);
+
+			$administratorController = new AdministratorController;
+			$administratorController->resetPassword($login, $email);
+		}
+		else
+		{
+			throw new Exception('Tous les champs ne sont pas remplis.');
+		}
+	}
+
+	elseif(isset($_POST['editInfos']))
+	{
+		if(!empty($_POST['password']))
+		{
+			$password = htmlspecialchars($_POST['password']);
+
+			$administratorController = new AdministratorController();
+			$administratorController->updatePassword();	
 		}
 		else
 		{
@@ -24,31 +60,15 @@ try
 	{
 		if(!empty($_POST['title']) && !empty($_POST['content']))
 		{
-			$_POST['title'] = htmlspecialchars($_POST['title']);
-			$_POST['content'] = htmlspecialchars($_POST['content']);
-			addPost($_POST['title'], $_POST['content']);
+			$title = htmlspecialchars($_POST['title']);
+			$content = htmlspecialchars($_POST['content']);
+
+			$postController = new PostController();
+			$postController->addPost($title, $content);
 		}
 		else
 		{
 			throw new Exception('Tous les champs ne sont pas remplis.');
-		}
-	}
-
-	elseif(isset($_POST['search']))
-	{
-		if(!empty($_POST['postSearch']))
-		{
-			$_POST['postSearch'] = htmlspecialchars($_POST['postSearch']);
-			$_POST['page'] = (int) $_POST['page'];
-			if($_POST['page'] > 0)
-			{
-				post($_POST['postSearch'], $_POST['page']);
-			}
-
-		}
-		else
-		{
-			throw new Exception('Le champs de recherche est vide.');
 		}
 	}
 
@@ -58,12 +78,16 @@ try
 		{
 			if(isset($_POST['id']))
 			{
-				$_POST['id'] = (int) $_POST['id'];
-				if($_POST['id'] > 0)
+				$postId = (int) $_POST['id'];
+
+				$title = htmlspecialchars($_POST['title']);
+				$content = htmlspecialchars($_POST['content']);
+
+				$postController = new PostController();
+
+				if($postController->exists($postId))
 				{
-					$_POST['title'] = htmlspecialchars($_POST['title']);
-					$_POST['content'] = htmlspecialchars($_POST['content']);
-					updatePost($_POST['id'], $_POST['title'], $_POST['content']);
+					$postController->updatePost($postId, $title, $content);
 				}
 				else
 				{
@@ -81,9 +105,59 @@ try
 		}
 	}
 
+	elseif(isset($_POST['postComment']))
+	{
+		if(!empty($_POST['author']) && !empty($_POST['comment']))
+		{
+			if(isset($_POST['id']))
+			{
+				$postId = (int) $_POST['id'];
+
+				$author = htmlspecialchars($_POST['author']);
+				$comment = htmlspecialchars($_POST['comment']);
+
+				$postController = new PostController();
+
+				if($postController->exists($postId))
+				{
+					$commentController = new CommentController();
+					$commentController->postComment($postId, $author, $comment);
+				}
+				else
+				{
+					throw new Exception('Cet article n\'existe pas.');
+				}
+			}	
+			else
+			{
+				throw new Exception('Aucun article n\'a été sélectionné.');
+			}
+		}
+		else
+		{
+			throw new Exception('Tous les champs ne sont pas remplis.');
+		}
+	}
+
+	elseif(isset($_POST['search']))
+	{
+		if(!empty($_POST['postSearch']))
+		{
+			$postSearch = htmlspecialchars($_POST['postSearch']);
+
+			$postController = new PostController();
+			$postController->post($postSearch);
+		}
+		else
+		{
+			throw new Exception('Le champs de recherche est vide.');
+		}
+	}
+
 	elseif(isset($_GET['disconnect']))
 	{
-		disconnect();
+		$administratorController = new AdministratorController();
+		$administratorController->disconnect();
 	}
 
 	elseif(isset($_GET['front']))
@@ -91,33 +165,40 @@ try
 		switch($_GET['front'])
 		{
 			case 'listPosts':
+
 				if(isset($_GET['page']))
 				{
-					$_GET['page'] = (int) $_GET['page'];
-					if($_GET['page'] > 0)
+					$page = (int) $_GET['page'];
+
+					if($page > 0)
 					{
-						$currentPage = $_GET['page'];
+						$currentPage = $page;
 					}
 					else
 					{
 						$currentPage = 1;
 					}
-					listPosts($currentPage);
+
+					$postController = new PostController();
+					$postController->listPosts($currentPage);
 				}
 				else
 				{
 					throw new Exception ('Aucune page n\'a été sélectionné.');
 				}
+
 			break;
 
 			case 'post':
-				if(isset($_GET['id'], $_GET['page']))
+
+				if(isset($_GET['id']))
 				{
-					$_GET['id'] = (int) $_GET['id'];
-					$_GET['page'] = (int) $_GET['page'];
-					if($_GET['id'] > 0 && $_GET['page'] > 0)
+					$postId = (int) $_GET['id'];
+
+					if($postId > 0)
 					{
-						post($_GET['id'], $_GET['page']);
+						$postController = new PostController();
+						$postController->post($postId);
 					}
 					else
 					{
@@ -128,6 +209,7 @@ try
 				{
 					throw new Exception('Aucun article n\'a été sélectionné.');
 				}
+
 			break;
 
 			default:
@@ -138,33 +220,47 @@ try
 
 	elseif(isset($_GET['back']))
 	{
-		if(isConnect())
+		$administratorController = new AdministratorController();
+
+		if($administratorController->isConnect())
 		{
 			switch($_GET['back'])
 			{
 				case 'backOfficeView':
-					backOffice();
+
+					$administratorController->backOffice();
+
 				break;
 
 				case 'listPosts':
-					backgroundListPosts();
+
+					$postController = new PostController();
+					$postController->backgroundListPosts();
+
 				break;
 
 				case 'addPost':
+
 					require('view\backend\editPostView.php');
+
 				break;
 
 				case 'reported':
-					reported();
+
+					$commentController = new CommentController();
+					$commentController->reported();
+
 				break;
 
 				case 'editPost':
+
 					if(isset($_GET['id']))
 					{
-						$_GET['id'] = (int) $_GET['id'];
-						if($_GET['id'] > 0)
+						$postId = (int) $_GET['id'];
+						if($postId > 0)
 						{
-							editPost($_GET['id']);
+							$postController = new PostController();
+							$postController->editPost($postId);
 						}
 						else
 						{
@@ -175,12 +271,18 @@ try
 					{
 						throw new Exception('Aucun article n\'a été sélectionné.');
 					}
+
 				break;
 
 				default:
 					throw new Exception('La page est inconnue.');
 				break;
 			}
+		}
+		elseif($_GET['back'] == 'resetPassword')
+		{
+
+			$administratorController->resetPasswordView();
 		}
 		else
 		{
@@ -192,48 +294,16 @@ try
 	{
 		switch($_GET['action'])
 		{
-			case 'postComment':
-				if(!empty($_POST['author']) && !empty($_POST['comment']))
-				{
-					if(isset($_GET['postId'], $_GET['page']))
-					{
-						$_GET['postId'] = (int) $_GET['postId'];
-						$_GET['page'] = (int) $_GET['page'];
-						$_POST['author'] = htmlspecialchars($_POST['author']);
-						$_POST['comment'] = htmlspecialchars($_POST['comment']);
-						postComment($_GET['postId'], $_POST['author'], $_POST['comment'], $_GET['page']);
-					}
-					else
-					{
-						throw new Exception('Aucun article n\'est sélectionné.');
-					}
-				}
-				else
-				{
-					throw new Exception('Tous les champs ne sont pas remplis.');
-				}
-			break;
-
-			case 'like':
-				if(isset($_GET['postId'], $_GET['page']))
-				{
-					$_GET['postId'] = (int) $_GET['postId'];
-					$_GET['page'] = (int) $_GET['page'];
-					if($_GET['postId'] > 0 && $_GET['page'] > 0)
-					{
-						likes($_GET['postId'], $_GET['page']);
-					}
-				}
-
 			case 'report':
-				if(isset($_GET['idComment'], $_GET['idPost'], $_GET['page']))
+
+				if(isset($_GET['id']))
 				{
-					$_GET['idComment'] = (int) $_GET['idComment'];
-					$_GET['idPost'] = (int) $_GET['idPost'];
-					$_GET['page'] = (int) $_GET['page'];
-					if($_GET['idComment'] > 0 && $_GET['idPost'] > 0 && $_GET['page'] > 0)
+					$idComment = (int) $_GET['id'];
+
+					if($idComment > 0)
 					{
-						reportComment($_GET['idComment'], $_GET['idPost'], $_GET['page']);
+						$commentController = new CommentController();
+						$commentController->reportComment($idComment);
 					}
 					else
 					{
@@ -244,15 +314,18 @@ try
 				{
 					throw new Exception('Aucun commentaire ou article n\'a été sélectionné.');
 				}
+
 			break;
 
 			case 'authorize':
+
 				if(isset($_GET['id']))
 				{
-					$_GET['id'] = (int) $_GET['id'];
-					if($_GET['id'] > 0)
+					$commentId = (int) $_GET['id'];
+					if($commentId > 0)
 					{
-						authorize($_GET['id']);
+						$commentController = new CommentController();
+						$commentController->authorize($commentId);
 					}
 					else
 					{
@@ -263,15 +336,18 @@ try
 				{
 					throw new Exception('Aucun commentaire n\'a été sélectionné');
 				}
+
 			break;
 
 			case 'deleteComment':
+
 				if(isset($_GET['id']))
 				{
-					$_GET['id'] = (int) $_GET['id'];
-					if($_GET['id'] > 0)
+					$commentId = (int) $_GET['id'];
+					if($commentId > 0)
 					{
-						deleteComment($_GET['id']);
+						$commentController = new CommentController();
+						$commentController->deleteComment($commentId);
 					}
 					else
 					{
@@ -282,25 +358,29 @@ try
 				{
 					throw new Exception('Aucun commentaire n\'a été sélectionné.');
 				}
+
 			break;
 
 			case 'deletePost':
+
 				if(isset($_GET['id']))
 				{
-					$_GET['id'] = (int) $_GET['id'];
-					if($_GET['id'] > 0)
+					$postId = (int) $_GET['id'];
+					if($postId > 0)
 					{
-						deletePost($_GET['id']);
+						$postController = new PostController();
+						$postController->deletePost($postId);
 					}
 					else
 					{
-						throw new Exception('Ce commentaire n\'existe pas.');
+						throw new Exception('Cet article n\'existe pas.');
 					}
 				}
 				else
 				{
-					throw new Exception('Aucun commentaire n\'a été sélectionné.');
+					throw new Exception('Aucun article n\'a été sélectionné.');
 				}
+
 			break;
 
 			default:
@@ -311,8 +391,9 @@ try
 
 	else
 	{
+		$postController = new PostController();
 		$page = 1;
-		listPosts($page);
+		$postController->listPosts($page);
 	}
 }
 catch(Exception $e)

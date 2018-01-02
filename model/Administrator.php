@@ -5,6 +5,7 @@ class Administrator
 	private $_id;
 	private $_login;
 	private $_password;
+	private $_email;
 
 	public function __construct(array $data)
 	{
@@ -44,6 +45,11 @@ class Administrator
 	public function setPassword($password)
 	{
 		$this->_password = $password;
+	}
+
+	public function setEmail($email)
+	{
+		$this->_email = $email;
 	}
 
 	public function id()

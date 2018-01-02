@@ -1,70 +1,92 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title><?= $post->title(); ?></title>
-		<meta charset = "utf-8" />
-		<meta name = "viewport" content = "width=device-width, initial-scale=1" />
-		<link rel = "stylesheet" href = "assets/css/main.css" />
-	</head>
-	<body class = "single">
-<?php
+<?php 
+
+$title = $post->title();
+ob_start();
+
 include('public/header.php');
 ?>
-		<div id = "main">
-			<article class = "post">
-				<header>
-					<div class = "title">
-						<h2><?= $post->title(); ?></h2>
-						<p>Chapitre</p>
-					</div>
-					<div class = "meta">
-						<time class = "published" datetime = "2015-11-01"><?= $post->postDate() ?></time>
-						<span class = "author name">Auteur</span>
-					</div>
-				</header>
-				<span class = "image featured"><img src = "images/pic01.jpg" alt = "Image mise en avant" /></span>
-				<p><?= nl2br($post->content()); ?></p>
-				<footer>
-					<ul class = "stats">
-						<li>General</li>
-						<li class = "icon fa-heart"><?= $post->likes(); ?></li>
-						<li class = "icon fa-comment">28</li>
-						<li><a href = "index.php?action=like&amp;page=<?= $currentPage; ?>&amp;postId=<?= $post->id(); ?>" class = "">Je like ! </a></li>
-					</ul>
-				</footer>
-				<ul class="actions pagination">
-					<li><a href = "index.php?front=listPosts&amp;page=<?= $currentPage ?>" class = "button big previous">Page précédente</a></li>
-				</ul>
-			</article>
-		<div/>
-				<legend>Ajouter un commentaire</legend>
-				<form action = "index.php?action=postComment&amp;postId=<?= $post->id(); ?>&amp;page=<?= $currentPage; ?>" method = "post">
-		        	<fieldset>
-		        		<label for = "author">Auteur</label>
-		        		<input type = "text" name = "author" />
-		        	</fieldset>
-		        	<fieldset>
-		        		<label for = "comment">Commentaire</label>
-		        	</fieldset>
-		        	<textarea name = "comment"></textarea>
-		    		<input class = "btn btn-default pull-right" type = "submit" value = "Poster un commentaire" />
-				</form>
+<div id = "main">
+	<article class = "post">
+		<header>
+			<div class = "title">
+				<h2><?= $post->title(); ?></h2>
 			</div>
+			<div class = "meta">
+				<time class = "published" datetime = "2015-11-01"><?= $post->postDate() ?></time>
+			</div>
+		</header>
+		<span class = "image featured"><img src = "images/pic01.jpg" alt = "Image mise en avant" /></span>
+		<p><?= nl2br($post->content()); ?></p>
+	</article>
+
+	<legend>Ajouter un commentaire</legend>
+	<form action = "index.php" method = "post" class = "blogForm">
+		<input type = "hidden" name = "id" value = "<?= $post->id(); ?>" />
+		<div class = "form-group">
+			<label for = "author">Auteur</label>
+			<input type = "text" name = "author" required/>
 		</div>
-	</div>
+    	
+    	<div class = "form-group">
+    		<label for = "comment">Commentaire</label>
+    		<textarea name = "comment" required></textarea>
+    	</div>
+		<input class = "btn btn-default pull-right" type = "submit" name = "postComment" value = "Poster un commentaire" />
+	</form>
+	<br/>
+
+
+	<legend>Commentaires</legend>
+	<div class="container content">
+    
+
 <?php
-foreach($comments as $comment)
+if(count($comments) > 0)
 {
-?>			<div class>
-            	<h4><?= $comment->author(); ?> <em> le <?= $comment->commentDate(); ?></em></h4>
-            	<div>
-	            	<?= nl2br(htmlspecialchars($comment->content())); ?>
+	foreach($comments as $comment)
+	{
+?>	
+		<div class="row">
+	        <div class="col-md-6">
+	            <div class="testimonials">
+	            	<div class="active item">
+	            		<div class="carousel-info">
+	                    	<img alt="anonyme-avatar" src="public/img/avatar" class="pull-left" />
+	                    	<div class="pull-left">
+	                      		<span class="testimonials-name"><?= $comment->author(); ?></span>
+	                      		<span class="testimonials-post"><?= $comment->commentDate(); ?> | <a onclick="reportComment(<?php echo $comment->id(); ?>)">Signaler</a></span>
+	                    	</div>
+	                  	</div>
+	                  	<blockquote>
+	                  		<p>
+	                  			<?= nl2br(htmlspecialchars($comment->content())); ?>
+	                  		</p>
+	                  	</blockquote>
+	                </div>
 	            </div>
-				<a class = "btn btn-default" href = "index.php?action=report&amp;idComment=<?= $comment->id()?>&amp;idPost=<?=$post->id()?>&amp;page=<?= $currentPage; ?>">Signaler</a>
-            </div>             		
+	        </div>
+	    </div>        		
+<?php
+	}
+}
+else
+{
+?>
+		<blockquote>
+			<p>
+				Aucun commentaire.
+			</p>
+		</blockquote>
 <?php
 }
 ?>
+	</div>
+</div>
+<br/>
 
-	</body>
-</html>
+<?php
+
+$content = ob_get_clean();
+require('public/postTemplate.php');
+
+?>

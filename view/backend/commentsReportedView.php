@@ -1,36 +1,60 @@
 <?php
-include('public\headerBack.php');
-if(!isset($_SESSION['administrator']))
-{
-	header('Location: index.php');
-}
-else
-{
+
+$title = 'Commentaires signalés';
+ob_start();
+
 ?>
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Commentaires signalés</title>
-		<meta charset = "utf-8">
-	</head>
-	<body>
-		<a href = "index.php?back=backOfficeView">Retour</a>
-<?php
-foreach($comments as $comment)
-{
-?>
+<div class="container">
 	<p>
-		Auteur : <?= $comment->author(); ?> <br />
-		Commentaire : <?= nl2br($comment->content()); ?> <br/>
-		Publié le : <?= $comment->commentDate(); ?> <br/>
-		Nombre de signalements : <?= $comment->reporting(); ?> <br/>
-		<a href = "index.php?action=authorize&amp;id=<?=$comment->id()?>">Autoriser</a> | <a href = "index.php?action=deleteComment&amp;id=<?=$comment->id()?>">Supprimer</a>
+		<a href = "index.php?back=backOfficeView">Retour au tableau de bord</a>
 	</p>
+	<legend>Commentaires signalés</legend>
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default panel-table">
+                <div class="panel-body">
+                	<table class="table table-striped">
+                  		<thead>
+                    		<tr>
+                        		<th>Auteur</th>
+                        		<th>Commentaire</th>
+                        		<th>Signalement(s)</th>
+                        		<th></th>
+                    		</tr> 
+                  		</thead>
+                  		<tbody>
+
 <?php
+if(count($comments) > 0)
+{
+	foreach($comments as $comment)
+	{
+?>
+									<tr id = "<?= $comment->id(); ?>">
+		                            	<td><?= htmlspecialchars($comment->author()); ?></td>
+		                            	<td><?= nl2br(htmlspecialchars($comment->content())); ?></td>
+		                            	<td><?= $comment->reporting(); ?></td>
+		                            	<td align="center">
+		                              		<a class="btn btn-default" onclick = "authorizeComment(<?= $comment->id(); ?>)"><i class="fa fa-check"></i></a>
+		                              		<a class="btn btn-danger" onclick = "deleteComment(<?= $comment->id(); ?>)"><i class="fa fa-trash"></i></a>
+		                            	</td>
+		                            </tr>
+	
+<?php
+	}
 }
 ?>
-	</body>
-</html>
+								</tbody>
+		                    </table>
+		                </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
 <?php
-}
+
+$content = ob_get_clean();
+require('public/backTemplate.php');
+
 ?>
+

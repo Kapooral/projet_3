@@ -1,25 +1,28 @@
 <?php
-include('public\headerBack.php');
+
+$title = 'Page de connexion';
+ob_start();
+
 ?>
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Page de Connexion</title>
-		<meta charset = "utf-8" />
-		<link href = "public/css/bootstrap.css" rel = "stylesheet">
-		<link href = "public/css/connectionView.css" rel = "stylesheet">
-	</head>
-	<body>
+<div class = "container">
+	<div class = "row">
 		<form class = "col-lg-4 col-lg-offset-4" action = "index.php" method = "post">
 			<div class = "form-group">
 				<label for = "login">Identifiant</label>
-				<input class = "form-control" type = "text" name = "login" />
+				<input class = "form-control" type = "text" name = "login" required/>
 			</div>
 			<div class = "form-group">
 				<label for = "password">Mot de passe</label>
-				<input class = "form-control" type = "password" name = "password" />
+				<input class = "form-control" type = "password" name = "password" required/>
 			</div>
-			<input type = "submit" value = "Se connecter" name = "connect" />
+			<input type = "submit" value = "Se connecter" name = "connect" /><br/>
+			<a href = "index.php?back=resetPassword">Mot de passe oublié</a>
 		</form>
-	</body>
-</html>
+	</div>
+</div>
+<?php
+
+$content = ob_get_clean();
+require('public/backTemplate.php');
+
+?>

@@ -1,6 +1,7 @@
 <?php
 
-require_once('Manager.php');
+require_once('model/Manager.php');
+require_once('model/Post.php');
 
 class PostManager extends Manager
 {
@@ -13,7 +14,7 @@ class PostManager extends Manager
 
 	public function addPost($title, $content)
 	{
-		$req = $this->_db->prepare('INSERT INTO news (title, content, likes, post_date, last_edit) VALUES (:title, :content, 0, NOW(), NOW())');
+		$req = $this->_db->prepare('INSERT INTO news (title, content, post_date, last_edit) VALUES (:title, :content, NOW(), NOW())');
 		$req->bindValue(':title', $title);
 		$req->bindValue(':content', $content);
 		$affectedLines = $req->execute();
@@ -40,7 +41,7 @@ class PostManager extends Manager
 	{
 		$posts = [];
 
-		$req = $this->_db->query('SELECT id, title, content, likes, DATE_FORMAT(post_date, \'%d.%m.%Y\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news ORDER BY postDate DESC');
+		$req = $this->_db->query('SELECT id, title, content, DATE_FORMAT(post_date, \'%d.%m.%Y\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news ORDER BY postDate DESC');
 		while($data = $req->fetch(PDO::FETCH_ASSOC))
 		{
 			$posts[] = new Post($data);
@@ -53,13 +54,13 @@ class PostManager extends Manager
 	{
 		if(is_int($id))
 		{
-			$req = $this->_db->query('SELECT id, title, content, likes, DATE_FORMAT(post_date, \'%d.%m.%Y\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news WHERE id = ' . $id);
+			$req = $this->_db->query('SELECT id, title, content, DATE_FORMAT(post_date, \'%d.%m.%Y\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news WHERE id = ' . $id);
 
 			$data = $req->fetch(PDO::FETCH_ASSOC);
 		}
 		else
 		{
-			$req = $this->_db->prepare('SELECT id, title, content, likes, DATE_FORMAT(post_date, \'%d.%m.%Y\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news WHERE title = :title');
+			$req = $this->_db->prepare('SELECT id, title, content, DATE_FORMAT(post_date, \'%d.%m.%Y\') AS postDate, DATE_FORMAT(last_edit, \'%d/%m/%Y à %Hh/%imin/%ss\') AS lastEdit FROM news WHERE title = :title');
     		$req->execute([':title' => $id]);
 
     		$data = $req->fetch(PDO::FETCH_ASSOC);
@@ -79,18 +80,6 @@ class PostManager extends Manager
 		return $affectedLines;
 	}
 
-	public function likes($id)
-	{
-		$req = $this->_db->prepare('UPDATE news SET likes = likes + 1 WHERE id = :id');
-		$affectedLines = $req->execute([':id' => $id]);
-
-		return $affectedLines;
-	}
-
-	public function countLikes($id)
-	{
-		return $this->_db->query('SELECT COUNT(likes) FROM news WHERE id =' .$id)->fetchColumn();
-	}
 
 	public function count()
 	{
