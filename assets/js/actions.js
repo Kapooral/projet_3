@@ -41,7 +41,6 @@ $(function() {
 		});
 
 		e.preventDefault();
-
 	});
 
 });
@@ -72,7 +71,8 @@ function authorizeComment(id){
 						    showConfirmButton: false,
 						    timer: 1500
 					    });
-					    $('#' + id).remove();
+
+					    setTimeout(function(){ location.reload(); }, 1500);
 					}
 				},
 				error: function(data){
@@ -114,7 +114,8 @@ function deleteComment(id){
 						    showConfirmButton: false,
 						    timer: 1500
 					    });
-					    $('#' + id).remove();
+
+					    setTimeout(function(){ location.reload(); }, 1500);
 					}
 				},
 				error: function(data){
@@ -156,7 +157,8 @@ function deletePost(id){
 						    showConfirmButton: false,
 						    timer: 1500
 					    });
-					    $('#' + id).remove();
+
+					    setTimeout(function(){ location.reload(); }, 1500);
 					}
 				},
 				error: function(data){
@@ -198,6 +200,8 @@ function reportComment(id){
 						    showConfirmButton: false,
 						    timer: 1500
 					    });
+
+					    setTimeout(function(){ location.reload(); }, 1500);
 					}
 				},
 				error: function(data){
