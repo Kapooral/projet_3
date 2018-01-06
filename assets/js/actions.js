@@ -1,42 +1,48 @@
-$('.blogForm').on('submit', function(e){
-	var form = $(this);
-	var url = form.attr('action');
-	var type = form.attr('method');
-	var data = {};
+$(function() {
 
-	form.find('[name]').each(function(index, value) {
-		var input = $(this);
-		var name = input.attr('name');
-		var value = input.val();
-		data[name] = value;
-	});
+	$('.blogForm').on('submit', function(e){
+		var form = $(this);
+		var url = form.attr('action');
+		var type = form.attr('method');
+		var data = {};
 
-	$.ajax({
-		type: type,
-		url: url,
-		data: data,
-		dataType: 'JSON',
-		success: function(data){
-			if(data.success){
+		form.find('[name]').each(function(index, value) {
+			var input = $(this);
+			var name = input.attr('name');
+			var value = input.val();
+			data[name] = value;
+		});
+
+		$.ajax({
+			type: type,
+			url: url,
+			data: data,
+			dataType: 'JSON',
+			success: function(data){
+				if(data.success){
+					swal({
+					    type: 'success',
+					    text: data.text,
+					    showConfirmButton: false,
+					    timer: 1500
+				    });
+
+				    setTimeout(function(){ location.reload(); }, 1500);
+				}
+			},
+			error: function(response){
 				swal({
-				    type: 'success',
-				    text: data.text,
-				    showConfirmButton: false,
-				    timer: 1500
-			    });
+					type: 'error',
+					text: response,
+					showConfirmButton: false,
+					timer: 1500
+				});
 			}
-		},
-		error: function(response){
-			swal({
-				type: 'error',
-				text: response,
-				showConfirmButton: false,
-				timer: 1500
-			});
-		}
-	});
+		});
 
-	e.preventDefault();
+		e.preventDefault();
+
+	});
 
 });
 
@@ -82,6 +88,7 @@ function authorizeComment(id){
 	});	
 }
 
+
 function deleteComment(id){
 
 	swal({
@@ -123,6 +130,7 @@ function deleteComment(id){
 	});
 }
 
+
 function deletePost(id){
 
 	swal({
@@ -163,6 +171,7 @@ function deletePost(id){
 		}
 	});
 }
+
 
 function reportComment(id){
 

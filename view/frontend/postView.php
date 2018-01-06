@@ -16,7 +16,7 @@ include('public/header.php');
 			</div>
 		</header>
 		<span class = "image featured"><img src = "images/pic01.jpg" alt = "Image mise en avant" /></span>
-		<p><?= nl2br($post->content()); ?></p>
+		<p><?= $post->content(); ?></p>
 	</article>
 
 	<legend>Ajouter un commentaire</legend>
@@ -34,7 +34,6 @@ include('public/header.php');
 		<input class = "btn btn-default pull-right" type = "submit" name = "postComment" value = "Poster un commentaire" />
 	</form>
 	<br/>
-
 
 	<legend>Commentaires</legend>
 	<div class="container content">
@@ -59,7 +58,7 @@ if(count($comments) > 0)
 	                  	</div>
 	                  	<blockquote>
 	                  		<p>
-	                  			<?= nl2br(htmlspecialchars($comment->content())); ?>
+	                  			<?= htmlspecialchars($comment->content()); ?>
 	                  		</p>
 	                  	</blockquote>
 	                </div>
