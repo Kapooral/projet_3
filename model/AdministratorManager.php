@@ -35,14 +35,6 @@ class AdministratorManager extends Manager
 		}
 	}
 
-	public function emailExists($email)
-	{
-		$req = $this->_db->prepare('SELECT COUNT(*) FROM administrator WHERE email = :email');
-		$req->execute([':email' => $email]);
-
-		return (bool) $req->fetchColumn();
-	}
-
 	public function get($login)
 	{
 		$req = $this->_db->prepare('SELECT id, login, password, email FROM administrator WHERE login = :login');

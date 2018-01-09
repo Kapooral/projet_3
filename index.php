@@ -49,12 +49,54 @@ try
 
 	elseif(isset($_POST['editInfos']))
 	{
-		if(!empty($_POST['password']))
+		if(isset($_POST['token']) && $_POST['token'] == $_SESSION['token'])
 		{
-			$password = htmlspecialchars($_POST['password']);
+			if(isset($_POST['currentPassword']) && !empty($_POST['currentPassword']))
+			{
+				$password = htmlspecialchars($_POST['currentPassword']);
+				$administrator = unserialize($_SESSION['administrator']);
 
-			$administratorController = new AdministratorController();
-			$administratorController->updatePassword();	
+				if(password_verify($password, $administrator->password()))
+				{
+					if(isset($_POST['email'], $_POST['newPassword'], $_POST['confirmNewPassword']))
+					{
+						if(!empty($_POST['email']))
+						{
+							$email = htmlspecialchars($_POST['email']);
+							$administratorController = new AdministratorController();
+							$administratorController->updateEmail($administrator->login(), $email);
+						}
+						
+						if(!empty($_POST['newPassword']) && !empty($_POST['confirmNewPassword']))
+						{
+							$newPassword = htmlspecialchars($_POST['newPassword']);
+							$confirmNewPassword = htmlspecialchars($_POST['confirmNewPassword']);
+
+							if($confirmNewPassword === $newPassword)
+							{
+								$administratorController = new AdministratorController();
+								$administratorController->updatePassword($administrator->login(), $confirmNewPassword);
+							}
+							else
+							{
+								throw new Exception('Les mots de passes ne correspondent pas.');
+							}
+						}
+					}
+					else
+					{
+						throw new Exception('Veuillez renseigner au moins un champs.');
+					}
+				}
+				else
+				{
+					throw new Exception('Le mot de passe entré est incorrect.');
+				}
+			}
+			else
+			{
+				throw new Exception('Veuillez entrer votre mot de passe.');
+			}
 		}
 		else
 		{
@@ -160,7 +202,7 @@ try
 		}
 	}
 
-	elseif(isset($_GET['disconnect']))
+	elseif(isset($_GET['disconnect'], $_GET['token']) && $_GET['token'] == $_SESSION['token'])
 	{
 		$administratorController = new AdministratorController();
 		$administratorController->disconnect();
@@ -172,7 +214,7 @@ try
 		{
 			case 'listPosts':
 
-				if(isset($_GET['page']))
+				if(isset($_GET['page'], $_GET['token']) && $_GET['token'] == $_SESSION['token'])
 				{
 					$page = (int) $_GET['page'];
 
@@ -197,7 +239,7 @@ try
 
 			case 'post':
 
-				if(isset($_GET['id']))
+				if(isset($_GET['id'], $_GET['token']) && $_GET['token'] == $_SESSION['token'])
 				{
 					$postId = (int) $_GET['id'];
 
@@ -304,6 +346,19 @@ try
 					else
 					{
 						throw new Exception('Aucun article n\'a été sélectionné.');
+					}
+
+				break;
+
+				case 'editInfos':
+
+					if(isset($_GET['token']) && $_GET['token'] == $_SESSION['token'])
+					{
+						$administratorController->editInfos();
+					}
+					else
+					{
+						throw new Exception('Vous n\'êtes pas autorisé à accéder à cette page.');
 					}
 
 				break;

@@ -22,7 +22,7 @@ class AdministratorController
 	    	}
 	    	else
 	    	{
-	    		$_SESSION['administrator'] = $administrator;
+	    		$_SESSION['administrator'] = serialize($administrator);
 	    		header('Location: index?back=backOfficeView&token=' . $_SESSION['token']);
 	    	}
 	    }
@@ -66,9 +66,10 @@ class AdministratorController
 		}
 	}
 
-	public function updatePassword($password)
+	public function updatePassword($login, $password)
 	{
-		$affectedLines = $administratorManager->updatePassword($password);
+		$administratorManager = new AdministratorManager();
+		$affectedLines = $administratorManager->updatePassword($login, $password);
 
 		if($affectedLines === false)
 		{
@@ -76,10 +77,30 @@ class AdministratorController
 		}
 		else
 		{
-			header('Content-type: text/javascript');
-			$json = array('success' => 1, 'text' => 'Mot de passe mis à jour !');
+			unset($_SESSION['administrator']);
 
-			echo json_encode($json);
+			$administrator = $administratorManager->get($login);
+			$_SESSION['administrator'] = serialize($administrator);
+	    	header('Location: index?back=backOfficeView&token=' . $_SESSION['token']);
+		}
+	}
+
+	public function updateEmail($login, $email)
+	{
+		$administratorManager = new AdministratorManager();
+		$affectedLines = $administratorManager->updateEmail($login, $email);
+
+		if($affectedLines === false)
+		{
+			throw new Exception('Impossible de mettre à jour l\'adresse e-mail.');
+		}
+		else
+		{
+			unset($_SESSION['administrator']);
+
+			$administrator = $administratorManager->get($login);
+			$_SESSION['administrator'] = serialize($administrator);
+	    	header('Location: index?back=backOfficeView&token=' . $_SESSION['token']);
 		}
 	}
 		
@@ -108,5 +129,10 @@ class AdministratorController
 		$postManager = new PostManager();
 
 		require('view\backend\backOfficeView.php');
+	}
+
+	public function editInfos()
+	{
+		require('view\backend\editInfos.php');
 	}
 }

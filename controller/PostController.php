@@ -50,7 +50,7 @@ class PostController
 		}
 		else
 		{
-			header('Location: index.php?back=listPosts');
+			header('Location: index.php?back=listPosts&token=' . $_SESSION['token']);
 		}	
 	}
 
@@ -86,7 +86,7 @@ class PostController
 			}
 			else
 			{
-				header('Location: index.php?back=listPosts');
+				header('Location: index.php?back=listPosts&token=' . $_SESSION['token']);
 			}
 		}
 	}

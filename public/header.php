@@ -1,11 +1,11 @@
 <!-- Header -->
 			<header id="header">
-				<h1><a href="index.php">Billet simple pour l'Alaska</a></h1>
+				<h1><a href="index.php?token=<?= $_SESSION['token']; ?>">Billet simple pour l'Alaska</a></h1>
 
 				<nav class="links">
 					<ul>
 						<li><a href="index.php?back=backOfficeView&amp;token=<?= $_SESSION['token']; ?>">Administration</a></li>
-						<li><a href="index.php">Articles</a></li>
+						<li><a href="index.php?token=<?= $_SESSION['token']; ?>">Articles</a></li>
 					</ul>
 				</nav>
 
@@ -37,7 +37,7 @@
 					<nav class="links">
 						<ul>
 							<li><a href="index.php?back=backOfficeView&amp;token=<?= $_SESSION['token']; ?>">Administration</a></li>
-							<li><a href="index.php">Articles</a></li>
+							<li><a href="index.php?token=<?= $_SESSION['token']; ?>">Articles</a></li>
 						</ul>
 					</nav>
 
@@ -46,13 +46,13 @@
 if(isset($_SESSION['administrator']))
 {
 ?>									
-						<li><a href="?disconnect=1" class="button big fit">Se déconnecter</a></li>
+						<li><a href="?disconnect=1&amp;token=<?= $_SESSION['token']; ?>" class="button big fit">Se déconnecter</a></li>
 <?php
 }
 else
 {
 ?>
-						<li><a href="index.php?back=backOfficeView" class="button big fit">Se connecter</a></li>
+						<li><a href="index.php?back=backOfficeView&amp;token=<?= $_SESSION['token']; ?>" class="button big fit">Se connecter</a></li>
 <?php
 }
 ?>

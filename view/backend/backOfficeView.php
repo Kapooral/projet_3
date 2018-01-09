@@ -61,7 +61,7 @@ ob_start();
 						</div>
 					</div>
 				</div>
-				<a href = "#">
+				<a href = "index.php?back=editInfos&amp;token=<?= $_SESSION['token']; ?>">
 					<div class = "panel-body">
 						<span class = "pull-left">Modifier</span>
 						<span class = "pull-right">

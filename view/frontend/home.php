@@ -14,7 +14,7 @@ foreach($posts as $post)
 							<article class="post">
 								<header>
 									<div class="title">
-										<h2><a href="index.php?front=post&amp;id=<?= $post->id() ?>"><?= $post->title(); ?></a></h2>
+										<h2><a href="index.php?front=post&amp;id=<?= $post->id() ?>&amp;token=<?= $_SESSION['token']; ?>"><?= $post->title(); ?></a></h2>
 									</div>
 									<div class="meta">
 										<time class="published" datetime="2015-11-01"><?= $post->postDate(); ?></time>
@@ -24,7 +24,7 @@ foreach($posts as $post)
 								<p><?= substr($post->content(), 0, 300) . '...' ?></p>
 								<footer>
 									<ul class="actions">
-										<li><a href="index.php?front=post&amp;page=<?= $currentPage ?>&amp;id=<?= $post->id() ?>" class="button big">Continuer de lire</a></li>
+										<li><a href="index.php?front=post&amp;page=<?= $currentPage ?>&amp;id=<?= $post->id() ?>&amp;token=<?= $_SESSION['token']; ?>" class="button big">Continuer de lire</a></li>
 									</ul>
 								</footer>
 							</article>
@@ -39,25 +39,25 @@ foreach($posts as $post)
 if($currentPage == 1)
 {
 ?>	
-								<li><a href="index.php?front=listPosts&amp;page=<?= $currentPage - 1 ?>" class="disabled button big previous">Page précédente</a></li>
+								<li><a href="index.php?front=listPosts&amp;page=<?= $currentPage - 1 ?>&amp;token=<?= $_SESSION['token']; ?>" class="disabled button big previous">Page précédente</a></li>
 <?php
 }
 else
 {
 ?>
-								<li><a href="index.php?front=listPosts&amp;page=<?= $currentPage - 1 ?>" class="button big previous">Page précédente</a></li>
+								<li><a href="index.php?front=listPosts&amp;page=<?= $currentPage - 1 ?>&amp;token=<?= $_SESSION['token']; ?>" class="button big previous">Page précédente</a></li>
 <?php
 }
 if($currentPage == $nbrPage)
 {
 ?>
-								<li><a href="index.php?front=listPosts&amp;page=<?= $currentPage + 1 ?>" class="disabled button big next">Page Suivante</a></li>
+								<li><a href="index.php?front=listPosts&amp;page=<?= $currentPage + 1 ?>&amp;token=<?= $_SESSION['token']; ?>" class="disabled button big next">Page Suivante</a></li>
 <?php
 }
 else
 {
 ?>
-								<li><a href="index.php?front=listPosts&amp;page=<?= $currentPage + 1 ?>" class="button big next">Page Suivante</a></li>
+								<li><a href="index.php?front=listPosts&amp;page=<?= $currentPage + 1 ?>&amp;token=<?= $_SESSION['token']; ?>" class="button big next">Page Suivante</a></li>
 <?php
 }
 ?>

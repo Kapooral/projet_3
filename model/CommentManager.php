@@ -15,9 +15,9 @@ class CommentManager extends Manager
 	public function postComment($postId, $author, $content)
 	{
 	    $req = $this->_db->prepare('INSERT INTO comment(postId, author, content, reporting, comment_date) VALUES(:postId, :author, :content, 0, NOW())');
-	    $req->bindValue(':postId', $postId);
-	    $req->bindValue('author', $author);
-	    $req->bindValue('content', $content);
+	    $req->bindValue(':postId', $postId, PDO::PARAM_INT);
+	    $req->bindValue('author', $author, PDO::PARAM_STR);
+	    $req->bindValue('content', $content, PDO::PARAM_STR);
 	    $affectedLines = $req->execute();
 
 	    return $affectedLines;
@@ -44,28 +44,6 @@ class CommentManager extends Manager
 	    }
 
 	    return $comments;
-	}
-
-	public function lastComments($postId)
-	{
-		$comments = [];
-
-		$req = $this->_db->prepare('SELECT id, author, content, reporting, DATE_FORMAT(comment_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS commentDate FROM comment WHERE postId = :postId ORDER BY comment_date DESC LIMIT 0, 10');
-		$req->execute(['postId' => $postId]);
-		while($data = $req->fetch(PDO::FETCH_ASSOC))
-		{
-			$comments [] = new Comment($data);
-		}
-
-		return $comments;
-	}
-
-	public function get($id)
-	{
-		$req = $this->_db->prepare('SELECT id, author, content, reporting, DATE_FORMAT(comment_date, \'%d/%m/%Y à %Hh/%imin/%ss\') AS commentDate FROM comment WHERE id = :id');
-		$req->execute([':id' => $id]);
-
-		return new Comment($req->fetch(PDO::FETCH_ASSOC));
 	}
 
 	public function report($id)
@@ -107,11 +85,6 @@ class CommentManager extends Manager
 	public function deletePostComments($postId)
 	{
 		$req = $this->_db->exec('DELETE FROM comment WHERE postId = ' . $postId);
-	}
-
-	public function count()
-	{
-		return $this->_db->query('SELECT COUNT(*) FROM comment')->fetchColumn();
 	}
 
 	public function countReported()

@@ -15,8 +15,8 @@ class PostManager extends Manager
 	public function addPost($title, $content)
 	{
 		$req = $this->_db->prepare('INSERT INTO news (title, content, post_date, last_edit) VALUES (:title, :content, NOW(), NOW())');
-		$req->bindValue(':title', $title);
-		$req->bindValue(':content', $content);
+		$req->bindValue(':title', $title, PDO::PARAM_STR);
+		$req->bindValue(':content', $content, PDO::PARAM_STR);
 		$affectedLines = $req->execute();
 
 		return $affectedLines;
@@ -72,9 +72,9 @@ class PostManager extends Manager
 	public function update($id, $title, $content)
 	{
 		$req = $this->_db->prepare('UPDATE news SET title = :title, content = :content, last_edit = NOW() WHERE id = :id');
-		$req->bindValue(':title', $title);
-		$req->bindValue(':content', $content);
-		$req->bindValue(':id', $id);
+		$req->bindValue(':title', $title, PDO::PARAM_STR);
+		$req->bindValue(':content', $content, PDO::PARAM_STR);
+		$req->bindValue(':id', $id, PDO::PARAM_INT);
 		$affectedLines = $req->execute();
 
 		return $affectedLines;

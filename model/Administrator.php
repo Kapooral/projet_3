@@ -66,4 +66,9 @@ class Administrator
 	{
 		return $this->_password;
 	}
+
+	public function email()
+	{
+		return $this->_email;
+	}
 }
