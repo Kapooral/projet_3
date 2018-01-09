@@ -10,6 +10,7 @@ ob_start();
 			<div class = "form-group">
 				<label for = "login">Identifiant</label>
 				<input class = "form-control" type = "text" name = "login" />
+				<input type = "hidden" name = "token" value = "<?= $_SESSION['token']; ?>" />
 			</div>
 			<div class = "form-group">
 				<label for = "password">Email</label>

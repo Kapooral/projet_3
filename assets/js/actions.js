@@ -46,7 +46,7 @@ $(function() {
 });
 
 
-function authorizeComment(id){
+function authorizeComment(id, token){
 
 	swal({
 	    type: 'warning',
@@ -61,7 +61,7 @@ function authorizeComment(id){
 			$.ajax({
 				type: 'GET',
 				url: 'index.php',
-				data: 'action=authorize&id=' + id,
+				data: 'action=authorize&id=' + id + '&token=' + token,
 				dataType: 'JSON',
 				success: function(data){
 					if(data.success){
@@ -89,7 +89,7 @@ function authorizeComment(id){
 }
 
 
-function deleteComment(id){
+function deleteComment(id, token){
 
 	swal({
 	    type: 'warning',
@@ -104,7 +104,7 @@ function deleteComment(id){
 			$.ajax({
 				type: 'GET',
 				url: 'index.php',
-				data: 'action=deleteComment&id=' + id,
+				data: 'action=deleteComment&id=' + id + '&token=' + token,
 				dataType: 'JSON',
 				success: function(data){
 					if(data.success){
@@ -132,7 +132,7 @@ function deleteComment(id){
 }
 
 
-function deletePost(id){
+function deletePost(id, token){
 
 	swal({
 	    type: 'warning',
@@ -147,7 +147,7 @@ function deletePost(id){
 			$.ajax({
 				type: 'GET',
 				url: 'index.php',
-				data: 'action=deletePost&id=' + id,
+				data: 'action=deletePost&id=' + id + '&token=' + token,
 				dataType: 'JSON',
 				success: function(data){
 					if(data.success){
@@ -175,7 +175,7 @@ function deletePost(id){
 }
 
 
-function reportComment(id){
+function reportComment(id, token){
 
 	swal({
 	    type: 'warning',
@@ -190,7 +190,7 @@ function reportComment(id){
 			$.ajax({
 				type: 'GET',
 				url: 'index.php',
-				data: 'action=report&id=' + id,
+				data: 'action=report&id=' + id + '&token=' + token,
 				dataType: 'JSON',
 				success: function(data){
 					if(data.success){

@@ -6,7 +6,7 @@ ob_start();
 ?>
 <div class="container">
 	<p>
-		<a href = "index.php?back=backOfficeView">Retour au tableau de bord</a>
+		<a href = "index.php?back=backOfficeView&amp;token=<?= $_SESSION['token']; ?>">Retour au tableau de bord</a>
 	</p>
 	<legend>Commentaires signalés</legend>
 	<div class="row">
@@ -35,8 +35,8 @@ if(count($comments) > 0)
 		                            	<td><?= nl2br(htmlspecialchars($comment->content())); ?></td>
 		                            	<td><?= $comment->reporting(); ?></td>
 		                            	<td align="center">
-		                              		<a class="btn btn-default" onclick = "authorizeComment(<?= $comment->id(); ?>)"><i class="fa fa-check"></i></a>
-		                              		<a class="btn btn-danger" onclick = "deleteComment(<?= $comment->id(); ?>)"><i class="fa fa-trash"></i></a>
+		                              		<a class="btn btn-default" onclick = "authorizeComment('<?= $comment->id(); ?>', '<?= $_SESSION['token']; ?>')"><i class="fa fa-check"></i></a>
+		                              		<a class="btn btn-danger" onclick = "deleteComment('<?= $comment->id(); ?>', '<?= $_SESSION['token']; ?>')"><i class="fa fa-trash"></i></a>
 		                            	</td>
 		                            </tr>
 	

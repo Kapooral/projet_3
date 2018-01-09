@@ -24,7 +24,8 @@ include('public/header.php');
 		<input type = "hidden" name = "id" value = "<?= $post->id(); ?>" />
 		<div class = "form-group">
 			<label for = "author">Auteur</label>
-			<input type = "text" name = "author" required/>
+			<input type = "text" name = "author" required />
+			<input type = "hidden" name = "token" value = "<?= $_SESSION['token']; ?>" />
 		</div>
     	
     	<div class = "form-group">
@@ -53,7 +54,7 @@ if(count($comments) > 0)
 	                    	<img alt="anonyme-avatar" src="public/img/avatar" class="pull-left" />
 	                    	<div class="pull-left">
 	                      		<span class="testimonials-name"><?= $comment->author(); ?></span>
-	                      		<span class="testimonials-post"><?= $comment->commentDate(); ?> | <a onclick="reportComment(<?php echo $comment->id(); ?>)">Signaler</a></span>
+	                      		<span class="testimonials-post"><?= $comment->commentDate(); ?> | <a onclick = "reportComment('<?= $comment->id(); ?>', '<?= $_SESSION['token']; ?>')">Signaler</a></span>
 	                    	</div>
 	                  	</div>
 	                  	<blockquote>

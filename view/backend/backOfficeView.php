@@ -8,7 +8,7 @@ ob_start();
 	<legend>Tableau de bord</legend>
 	<div class = "row">
 		<div class = "col-lg-3">
-			<a href = "index.php?back=addPost">
+			<a href = "index.php?back=addPost&amp;token=<?= $_SESSION['token']; ?>">
 				<div class = "panel panel-primary">
 					<div class = "panel-heading">
 						<div class = "row">
@@ -37,7 +37,7 @@ ob_start();
 						</div>
 					</div>
 				</div>
-				<a href = "index.php?back=listPosts">
+				<a href = "index.php?back=listPosts&amp;token=<?= $_SESSION['token']; ?>">
 					<div class = "panel-body">
 						<span class = "pull-left">Voir détails</span>
 						<span class = "pull-right">
@@ -85,7 +85,7 @@ ob_start();
 						</div>
 					</div>
 				</div>
-				<a href = "index.php?back=reported">
+				<a href = "index.php?back=reported&amp;token=<?= $_SESSION['token']; ?>">
 					<div class = "panel-body">
 						<span class = "pull-left">Modérer</span>
 						<span class = "pull-right">

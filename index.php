@@ -7,11 +7,17 @@ require('controller/CommentController.php');
 require('controller/AdministratorController.php');
 //require('controler/controler.php');
 
+if(!isset($_SESSION['token']))
+{
+	$token = bin2hex(openssl_random_pseudo_bytes(7));
+	$_SESSION['token'] = $token;
+}
+
 try
 {
 	if(isset($_POST['connect']))
 	{
-		if(!empty($_POST['login']) && !empty($_POST['password']))
+		if(isset($_POST['token']) && $_POST['token'] == $_SESSION['token'] && !empty($_POST['login']) && !empty($_POST['password']))
 		{
 			$login = htmlspecialchars($_POST['login']);
 			$password = htmlspecialchars($_POST['password']);
@@ -27,7 +33,7 @@ try
 
 	elseif(isset($_POST['resetPassword']))
 	{
-		if(!empty($_POST['login']) && !empty($_POST['email']))
+		if(isset($_POST['token']) && $_POST['token'] == $_SESSION['token'] && !empty($_POST['login']) && !empty($_POST['email']))
 		{
 			$login = htmlspecialchars($_POST['login']);
 			$email = htmlspecialchars($_POST['email']);
@@ -58,7 +64,7 @@ try
 
 	elseif(isset($_POST['publy']))
 	{
-		if(!empty($_POST['title']) && !empty($_POST['content']))
+		if(isset($_POST['token']) && $_POST['token'] == $_SESSION['token'] && !empty($_POST['title']) && !empty($_POST['content']))
 		{
 			$title = htmlspecialchars($_POST['title']);
 			$content = htmlspecialchars($_POST['content']);
@@ -74,7 +80,7 @@ try
 
 	elseif(isset($_POST['update']))
 	{
-		if(!empty($_POST['title']) && !empty($_POST['content']))
+		if(isset($_POST['token']) && $_POST['token'] == $_SESSION['token'] && !empty($_POST['title']) && !empty($_POST['content']))
 		{
 			if(isset($_POST['id']))
 			{
@@ -107,7 +113,7 @@ try
 
 	elseif(isset($_POST['postComment']))
 	{
-		if(!empty($_POST['author']) && !empty($_POST['comment']))
+		if(isset($_POST['token']) && $_POST['token'] == $_SESSION['token'] && !empty($_POST['author']) && !empty($_POST['comment']))
 		{
 			if(isset($_POST['id']))
 			{
@@ -141,7 +147,7 @@ try
 
 	elseif(isset($_POST['search']))
 	{
-		if(!empty($_POST['postSearch']))
+		if(isset($_POST['token']) && $_POST['token'] == $_SESSION['token'] && !empty($_POST['postSearch']))
 		{
 			$postSearch = htmlspecialchars($_POST['postSearch']);
 
@@ -150,7 +156,7 @@ try
 		}
 		else
 		{
-			throw new Exception('Le champs de recherche est vide.');
+			throw new Exception('Tous les champs ne sont pas remplis.');
 		}
 	}
 
@@ -228,33 +234,61 @@ try
 			{
 				case 'backOfficeView':
 
-					$administratorController->backOffice();
+					if(isset($_GET['token']) && $_GET['token'] == $_SESSION['token'])
+					{
+						$administratorController->backOffice();
+					}
+					else
+					{
+						throw new Exception('Vous n\'êtes pas autorisé à accéder à cette page.');
+					}
 
 				break;
 
 				case 'listPosts':
 
-					$postController = new PostController();
-					$postController->backgroundListPosts();
+					if(isset($_GET['token']) && $_GET['token'] == $_SESSION['token'])
+					{
+						$postController = new PostController();
+						$postController->backgroundListPosts();
+					}
+					else
+					{
+						throw new Exception('Vous n\'êtes pas autorisé à accéder à cette page.');
+					}
 
 				break;
 
 				case 'addPost':
 
-					require('view\backend\editPostView.php');
+					if(isset($_GET['token']) && $_GET['token'] == $_SESSION['token'])
+					{
+						require('view\backend\editPostView.php');
+					}
+					else
+					{
+						throw new Exception('Vous n\'êtes pas autorisé à accéder à cette page.');
+					}
 
 				break;
 
 				case 'reported':
 
-					$commentController = new CommentController();
-					$commentController->reported();
+					if(isset($_GET['token']) && $_GET['token'] == $_SESSION['token'])
+					{
+						$commentController = new CommentController();
+						$commentController->reported();
+					}
+					else
+					{
+						throw new Exception('Vous n\'êtes pas autorisé à accéder à cette page.');
+					}
 
 				break;
 
 				case 'editPost':
 
-					if(isset($_GET['id']))
+					if(isset($_GET['id'], $_GET['token']) && $_GET['token'] == $_SESSION['token'])
 					{
 						$postId = (int) $_GET['id'];
 						if($postId > 0)
@@ -296,7 +330,7 @@ try
 		{
 			case 'report':
 
-				if(isset($_GET['id']))
+				if(isset($_GET['id'], $_GET['token']) && $_GET['token'] == $_SESSION['token'])
 				{
 					$idComment = (int) $_GET['id'];
 
@@ -312,14 +346,14 @@ try
 				}
 				else
 				{
-					throw new Exception('Aucun commentaire ou article n\'a été sélectionné.');
+					throw new Exception('Aucun commentaire n\'a été sélectionné.');
 				}
 
 			break;
 
 			case 'authorize':
 
-				if(isset($_GET['id']))
+				if(isset($_GET['id'], $_GET['token']) && $_GET['token'] == $_SESSION['token'])
 				{
 					$commentId = (int) $_GET['id'];
 					if($commentId > 0)
@@ -341,7 +375,7 @@ try
 
 			case 'deleteComment':
 
-				if(isset($_GET['id']))
+				if(isset($_GET['id'], $_GET['token']) && $_GET['token'] == $_SESSION['token'])
 				{
 					$commentId = (int) $_GET['id'];
 					if($commentId > 0)
@@ -363,7 +397,7 @@ try
 
 			case 'deletePost':
 
-				if(isset($_GET['id']))
+				if(isset($_GET['id'], $_GET['token']) && $_GET['token'] == $_SESSION['token'])
 				{
 					$postId = (int) $_GET['id'];
 					if($postId > 0)

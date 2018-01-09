@@ -4,7 +4,7 @@
 
 				<nav class="links">
 					<ul>
-						<li><a href="index.php?back=backOfficeView">Administration</a></li>
+						<li><a href="index.php?back=backOfficeView&amp;token=<?= $_SESSION['token']; ?>">Administration</a></li>
 						<li><a href="index.php">Articles</a></li>
 					</ul>
 				</nav>
@@ -24,7 +24,8 @@
 			<!-- Search -->
 				<section>
 					<form class="search" method="post" action="index.php">
-						<input type="text" name="postSearch" placeholder="Rechercher un article" required>
+						<input type="text" name="postSearch" placeholder="Rechercher un article" required />
+						<input type = "hidden" name = "token" value = "<?= $_SESSION['token']; ?>" />
 						<br/>
 						<input type = "submit" name = "search" class="button big fit">
 					</form>
@@ -35,7 +36,7 @@
 				<section>
 					<nav class="links">
 						<ul>
-							<li><a href="index.php?back=backOfficeView">Administration</a></li>
+							<li><a href="index.php?back=backOfficeView&amp;token=<?= $_SESSION['token']; ?>">Administration</a></li>
 							<li><a href="index.php">Articles</a></li>
 						</ul>
 					</nav>

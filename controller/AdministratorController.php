@@ -23,7 +23,7 @@ class AdministratorController
 	    	else
 	    	{
 	    		$_SESSION['administrator'] = $administrator;
-	    		header('Location: index?back=backOfficeView');
+	    		header('Location: index?back=backOfficeView&token=' . $_SESSION['token']);
 	    	}
 	    }
 	}

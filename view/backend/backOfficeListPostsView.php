@@ -7,7 +7,7 @@ ob_start();
 
 <div class = "container">
   <p>
-    <a href = "index.php?back=backOfficeView">Retour au tableau de bord</a>
+    <a href = "index.php?back=backOfficeView&amp;token=<?= $_SESSION['token']; ?>">Retour au tableau de bord</a>
   </p>
 	<legend>Liste des articles</legend>
 	<div class="row">
@@ -35,8 +35,8 @@ if(count($posts) > 0)
                             	<td><?= $post->postDate() ?></td>
                             	<td align="center">
                             		<a class="btn btn-default" href="index.php?front=post&amp;id=<?= $post->id() ?>"><i class="fa fa-eye"></i></a>
-                              		<a class="btn btn-default" href = "index.php?back=editPost&amp;id=<?=$post->id(); ?>"><i class="fa fa-pencil"></i></a>
-                              		<a class="btn btn-danger" onclick = "deletePost(<?= $post->id(); ?>)"><i class="fa fa-trash"></i></a>
+                              		<a class="btn btn-default" href = "index.php?back=editPost&amp;id=<?=$post->id(); ?>&amp;token=<?= $_SESSION['token']; ?>"><i class="fa fa-pencil"></i></a>
+                              		<a class="btn btn-danger" onclick = "deletePost('<?= $post->id(); ?>', '<?= $_SESSION['token']; ?>')"><i class="fa fa-trash"></i></a>
                             	</td>
                             </tr>
 	
